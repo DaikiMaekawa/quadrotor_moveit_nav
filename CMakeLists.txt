@@ -4,7 +4,7 @@ project(quadrotor_obstacle_avoidance)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED roscpp)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -102,9 +102,9 @@ add_executable(obstacle_avoidance src/obstacle_avoidance.cpp)
 # add_dependencies(quadrotor_obstacle_avoidance_node quadrotor_obstacle_avoidance_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(quadrotor_obstacle_avoidance_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(obstacle_avoidance
+    ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
