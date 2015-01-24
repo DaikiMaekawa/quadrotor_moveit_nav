@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
     
     geometry_msgs::Twist cmd;
     
-    cmd.linear.z = 5;
+    cmd.linear.z = 1;
     cmd_pub.publish(cmd);
     ros::Duration(5).sleep();
     
