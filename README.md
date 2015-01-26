@@ -1,4 +1,4 @@
-# quadrotor_obstacle_avoidance
+## About
 
 Quadrotor Obstacle Avoidance with Artificial Potential Fields
 
