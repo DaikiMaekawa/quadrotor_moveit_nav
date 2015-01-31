@@ -13,11 +13,11 @@ int main(int argc, char *argv[]){
     
     cmd.linear.z = 1;
     cmd_pub.publish(cmd);
-    ros::Duration(5).sleep();
+    ros::Duration(3).sleep();
     
     cmd.linear.z = 0.0;
     cmd_pub.publish(cmd);
-    ros::Duration(5).sleep();
+    ros::Duration(3).sleep();
 
     return 0;
 }
