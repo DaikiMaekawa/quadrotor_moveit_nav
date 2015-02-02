@@ -27,7 +27,6 @@ int main(int argc, char *argv[]){
     double r[2], u[2];
     double obs[2];
     double U = 0;
-    //double  U, A, B, n, m, d;
     
     const double A = 0;
     const double B = 13000;
@@ -47,7 +46,7 @@ int main(int argc, char *argv[]){
     
     //d = r.Magnitude()/Units[i].fLength;
     const double length = 4.0;
-    d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
+    const double d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
     U = -A/pow(d, n) + B/pow(d, m);
     
     u[0] *= U;
