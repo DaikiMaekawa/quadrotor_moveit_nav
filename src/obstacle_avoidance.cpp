@@ -44,14 +44,13 @@ int main(int argc, char *argv[]){
     u = r;
     normalize(u);
     
-    //d = r.Magnitude()/Units[i].fLength;
-    const double length = 4.0;
+    const double length = 4.0; //TODO: fix param
     const double d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
     U = -A/pow(d, n) + B/pow(d, m);
     
     u[0] *= U;
     u[1] *= U;
-    //Fs += VRotate2D(-Units[i].fOrientation, U * u);    
+    //Fs += VRotate2D(-Units[i].fOrientation, U * u);
     
     cmd_pub.publish(cmd);
 
