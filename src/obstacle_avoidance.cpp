@@ -20,9 +20,15 @@ int main(int argc, char *argv[]){
     
     ros::Duration(1).sleep();
     geometry_msgs::Twist cmd;
+    cmd.linear.z = 0.3;
+    cmd_pub.publish(cmd);
+    ros::Duration(1).sleep();
     
-    //cmd.linear.z = 1;
+    cmd.linear.z = 0;
+    cmd_pub.publish(cmd);
+    ros::Duration(1).sleep();
      
+    /*
     double Fs[2];
     double r[2], u[2];
     double obs[2];
@@ -44,15 +50,14 @@ int main(int argc, char *argv[]){
     u = r;
     normalize(u);
     
-    const double length = 4.0; //TODO: fix param
-    const double d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
+    //const double length = 4.0; //TODO: fix param
+    //const double d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
+    const double d = sqrt(r[0]*r[0] + r[1]*r[1]);
     U = -A/pow(d, n) + B/pow(d, m);
     
-    u[0] *= U;
-    u[1] *= U;
-    //Fs += VRotate2D(-Units[i].fOrientation, U * u);
-    
-    cmd_pub.publish(cmd);
+    Fs[0] += U * u[0];
+    Fs[1] += U * u[1];
+    */
 
     return 0;
 }
