@@ -4,7 +4,7 @@
 
 static const float tol = 0.000000000000001f;
 
-void normalize(double &vec[2]){
+void normalize(double vec[2]){
     float m = sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
     if(tol <= m) m = 1;
     vec[0] /= m;
