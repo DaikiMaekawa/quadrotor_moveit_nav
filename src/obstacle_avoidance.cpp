@@ -15,6 +15,8 @@ void normalize(double vec[2]){
 }
 
 int main(int argc, char *argv[]){
+    ros::init(argc, argv, "obstacle_avoidance");
+    
     ros::NodeHandle node;
     ros::Publisher cmd_pub = node.advertise<geometry_msgs::Twist>("cmd_vel", 10);
     
