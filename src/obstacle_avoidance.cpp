@@ -28,7 +28,6 @@ int main(int argc, char *argv[]){
     cmd_pub.publish(cmd);
     ros::Duration(1).sleep();
      
-    /*
     double Fs[2];
     double r[2], u[2];
     double obs[2];
@@ -47,7 +46,8 @@ int main(int argc, char *argv[]){
 
     r[0] -= obs[0];
     r[1] -= obs[1];
-    u = r;
+    u[0] = r[0];
+    u[1] = r[1];
     normalize(u);
     
     //const double length = 4.0; //TODO: fix param
@@ -57,7 +57,6 @@ int main(int argc, char *argv[]){
     
     Fs[0] += U * u[0];
     Fs[1] += U * u[1];
-    */
 
     return 0;
 }
