@@ -22,23 +22,26 @@ int main(int argc, char *argv[]){
     
     ros::Duration(1).sleep();
     geometry_msgs::Twist cmd;
-    cmd.linear.z = 0.3;
+    cmd.linear.z = 0.15;
     cmd_pub.publish(cmd);
-    ros::Duration(1).sleep();
+    ros::Duration(3).sleep();
     
+    cmd.linear.z = -0.13;
+    cmd_pub.publish(cmd);
+    ros::Duration(3).sleep();
+
     cmd.linear.z = 0;
     cmd_pub.publish(cmd);
-    ros::Duration(1).sleep();
+    ros::Duration(3).sleep();
      
     double Fs[2];
-    double r[2], u[2];
+    double u[2];
     double obs[2];
-    double U = 0;
     
     const double A = 0;
-    const double B = 13000;
+    const double B = 3;
     const double n = 1;
-    const double m = 2.5;
+    const double m = 1.5;
 
     const double force = 0.025;
     
@@ -46,19 +49,22 @@ int main(int argc, char *argv[]){
     obs[0] = 0.5;
     obs[1] = 0;
 
-    r[0] -= obs[0];
-    r[1] -= obs[1];
-    u[0] = r[0];
-    u[1] = r[1];
+    u[0] = obs[0];
+    u[1] = obs[1];
     normalize(u);
     
-    //const double length = 4.0; //TODO: fix param
-    //const double d = sqrt(r[0]*r[0] + r[1]*r[1]) / length;
-    const double d = sqrt(r[0]*r[0] + r[1]*r[1]);
-    U = -A/pow(d, n) + B/pow(d, m);
+    const double d = sqrt(obs[0]*obs[0] + obs[1]*obs[1]);
+    double U = -A/pow(d, n) + B/pow(d, m);
     
     Fs[0] += U * u[0];
     Fs[1] += U * u[1];
+
+    cmd.linear.x = Fs[0] * force;
+    cmd.linear.y = Fs[1] * force;
+    
+    ROS_INFO_STREAM("cmd = " << cmd);
+    cmd_pub.publish(cmd);
+    ros::Duration(10).sleep();
 
     return 0;
 }
