@@ -23,7 +23,7 @@ void normalize(double vec[3]){
 
 class ArtificialPotentialField{
 public:
-    ArtificialPotentialField(const ros::NodeHandle &node) : 
+    ArtificialPotentialField(ros::NodeHandle &node) : 
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10))
     {
         for(int i=0; i < 3; i++) obs_[i] = 0;
@@ -85,15 +85,16 @@ private:
         min_obs[1] = obs_msg->points[0].y;
         min_obs[2] = obs_msg->points[0].z;
 
-        float min_dist = magnitude(obs1);
+        float min_dist = magnitude(min_obs);
         
-        for(int i=1; i < obs_msg->get_points_size(); i++){
+        //for(int i=1; i < obs_msg->get_points_size(); i++){
+        for(int i=1; i < 2; i++){
             double obs[3];
             obs[0] = obs_msg->points[i].x;
             obs[1] = obs_msg->points[i].y;
             obs[2] = obs_msg->points[i].z;
 
-            double dist = magnitude(obs2);
+            double dist = magnitude(obs);
             if(dist < min_dist){
                 min_obs[0] = obs[0];
                 min_obs[1] = obs[1];
@@ -115,7 +116,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "obstacle_avoidance");
     
     ros::NodeHandle node;
-    apf = ArtificialPotentialField(node);
+    ArtificialPotentialField apf = ArtificialPotentialField(node);
     apf.spin();
     
     return 0;
