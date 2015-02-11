@@ -80,16 +80,13 @@ public:
 
 private:
     void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
-        double min_obs[3];
         
         ROS_INFO_STREAM("size = " << obs_msg->points.size());
-        if(obs_msg->points.size()){
-            ROS_INFO("ok");
-        }else{
-            ROS_INFO("bad");
+        if(obs_msg->points.size() == 0){
             return;
         }
         
+        double min_obs[3];
         min_obs[0] = obs_msg->points[0].x;
         min_obs[1] = obs_msg->points[0].y;
         min_obs[2] = obs_msg->points[0].z;
