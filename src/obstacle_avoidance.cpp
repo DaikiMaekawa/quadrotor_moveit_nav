@@ -73,6 +73,7 @@ public:
             //ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
+            ros::spinOnce();
         }
     }
 
