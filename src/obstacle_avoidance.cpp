@@ -16,6 +16,10 @@ void normalize(double vec[3]){
     if(fabs(vec[2]) < tol) vec[2] = 0.0f;
 }
 
+double magnitude(double vec[3]){
+    return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+}
+
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(){
