@@ -4,6 +4,10 @@
 
 static const float tol = 0.000000000000001f;
 
+double magnitude(double vec[3]){
+    return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+}
+
 void normalize(double vec[3]){
     float m = magnitude(vec);
     if(tol <= m) m = 1;
@@ -14,10 +18,6 @@ void normalize(double vec[3]){
     if(fabs(vec[0]) < tol) vec[0] = 0.0f;
     if(fabs(vec[1]) < tol) vec[1] = 0.0f;
     if(fabs(vec[2]) < tol) vec[2] = 0.0f;
-}
-
-double magnitude(double vec[3]){
-    return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 }
 
 class ArtificialPotentialField{
