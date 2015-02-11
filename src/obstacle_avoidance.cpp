@@ -81,9 +81,9 @@ private:
     void obstacleCallback(const sensor_msgs::PointCloud::ConstPtr &obs_msg){
         double min_obs[3];
         
-        double min_obs[0] = obs_msg->points[0].x;
-        double min_obs[1] = obs_msg->points[0].y;
-        double min_obs[2] = obs_msg->points[0].z;
+        min_obs[0] = obs_msg->points[0].x;
+        min_obs[1] = obs_msg->points[0].y;
+        min_obs[2] = obs_msg->points[0].z;
 
         float min_dist = magnitude(obs1);
         
