@@ -59,15 +59,32 @@ public:
 
 private:
     void obstacleCallback(const sensor_msgs::ConstPtr &obs_msg){
-        int max = obs_msg->get_points_size();
         double obs1[3];
         
-        double obs1[0] = obs_msg->points[0].x;
-        double obs1[1] = obs_msg->points[0].y;
-        double obs1[2] = obs_msg->points[0].z;
+        double min_obs[0] = obs_msg->points[0].x;
+        double min_obs[1] = obs_msg->points[0].y;
+        double min_obs[2] = obs_msg->points[0].z;
 
-        float min = sqrt(pow(x1,2))
+        float min_dist = magnitude(obs1);
+        
+        for(int i=1; i < obs_msg->get_points_size(); i++){
+            double obs[3];
+            obs[0] = obs_msg->points[i].x;
+            obs[1] = obs_msg->points[i].y;
+            obs[2] = obs_msg->points[i].z;
 
+            double dist = magnitude(obs2);
+            if(dist < min_dist){
+                min_obs[0] = obs[0];
+                min_obs[1] = obs[1];
+                min_obs[2] = obs[2];
+                min_dist = dist;
+            }
+        }
+
+        obs_[0] = min_obs[0];
+        obs_[1] = min_obs[1];
+        obs_[2] = min_obs[2];
     }
     
     double obs_[3];
