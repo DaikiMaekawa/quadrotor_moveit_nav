@@ -24,7 +24,9 @@ void normalize(double vec[3]){
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
-        cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10))
+        cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
+        obs_sub_(node.subscribe("slam_cloud", 10, &ArtificialPotentialField::obstacleCallback, this))
+
     {
         for(int i=0; i < 3; i++) obs_[i] = 0;
     }
@@ -106,6 +108,7 @@ private:
     
     double obs_[3];
     ros::Publisher cmd_pub_;
+    ros::Subscriber obs_sub_;
 };
 
 int main(int argc, char *argv[]){
