@@ -25,9 +25,9 @@ public:
     }
 
     void spin(){
-        double Fs[2];
-        double u[2];
-        double obs[2];
+        double Fs[3];
+        double u[3];
+        double obs[3];
         
         const double A = 0;
         const double B = 3;
@@ -36,19 +36,22 @@ public:
 
         const double force = 0.025;
         
-        Fs[0] = Fs[1] = 0;
+        Fs[0] = Fs[1] = Fs[2] = 0;
         obs[0] = 0.5;
         obs[1] = 0;
+        obs[2] = 0;
 
         u[0] = obs[0];
         u[1] = obs[1];
+        u[2] = obs[2];
         normalize(u);
         
-        const double d = sqrt(obs[0]*obs[0] + obs[1]*obs[1]);
+        const double d = sqrt(obs[0]*obs[0] + obs[1]*obs[1] + obs[2]*obs[2]);
         double U = -A/pow(d, n) + B/pow(d, m);
         
         Fs[0] += U * u[0];
         Fs[1] += U * u[1];
+        Fs[2] += U * u[2];
 
     }
 
