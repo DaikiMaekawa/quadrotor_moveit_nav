@@ -30,6 +30,8 @@ public:
     }
 
     void spin(){
+        ros::Rate r(10);
+        
         ros::Duration(1).sleep();
         geometry_msgs::Twist cmd;
         cmd.linear.z = 0.15;
@@ -40,41 +42,36 @@ public:
         cmd_pub_.publish(cmd);
         ros::Duration(3).sleep();
         
-        double Fs[3];
-        double u[3];
-        double obs[3];
-        
         const double A = 0;
         const double B = 3;
         const double n = 1;
         const double m = 1.5;
-
         const double force = 0.025;
         
-        Fs[0] = Fs[1] = Fs[2] = 0;
+        while(ros::ok()){
+            double Fs[3];
+            Fs[0] = Fs[1] = Fs[2] = 0;
+            
+            double u[3];
+            u[0] = obs_[0];
+            u[1] = obs_[1];
+            u[2] = obs_[2];
+            normalize(u);
+            
+            const double d = magnitude(obs_);
+            double U = -A/pow(d, n) + B/pow(d, m);
+            
+            Fs[0] += U * u[0];
+            Fs[1] += U * u[1];
+            Fs[2] += U * u[2];
 
-        obs[0] = 0.5;
-        obs[1] = 0;
-        obs[2] = 0;
-
-        u[0] = obs[0];
-        u[1] = obs[1];
-        u[2] = obs[2];
-        normalize(u);
-        
-        const double d = magnitude(obs);
-        double U = -A/pow(d, n) + B/pow(d, m);
-        
-        Fs[0] += U * u[0];
-        Fs[1] += U * u[1];
-        Fs[2] += U * u[2];
-
-        cmd.linear.x = Fs[0] * force;
-        cmd.linear.y = Fs[1] * force;
-        
-        ROS_INFO_STREAM("cmd = " << cmd);
-        cmd_pub_.publish(cmd);
-        ros::Duration(10).sleep();
+            cmd.linear.x = Fs[0] * force;
+            cmd.linear.y = Fs[1] * force;
+            
+            ROS_INFO_STREAM("cmd = " << cmd);
+            cmd_pub_.publish(cmd);
+            r.sleep();
+        }
     }
 
 private:
