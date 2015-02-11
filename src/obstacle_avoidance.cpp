@@ -22,11 +22,23 @@ double magnitude(double vec[3]){
 
 class ArtificialPotentialField{
 public:
-    ArtificialPotentialField(){
+    ArtificialPotentialField(const ros::NodeHandle &node) : 
+        cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10))
+    {
         for(int i=0; i < 3; i++) obs_[i] = 0;
     }
 
     void spin(){
+        ros::Duration(1).sleep();
+        geometry_msgs::Twist cmd;
+        cmd.linear.z = 0.15;
+        cmd_pub_.publish(cmd);
+        ros::Duration(3).sleep();
+        
+        cmd.linear.z = 0;
+        cmd_pub_.publish(cmd);
+        ros::Duration(3).sleep();
+        
         double Fs[3];
         double u[3];
         double obs[3];
@@ -39,6 +51,7 @@ public:
         const double force = 0.025;
         
         Fs[0] = Fs[1] = Fs[2] = 0;
+
         obs[0] = 0.5;
         obs[1] = 0;
         obs[2] = 0;
@@ -55,11 +68,17 @@ public:
         Fs[1] += U * u[1];
         Fs[2] += U * u[2];
 
+        cmd.linear.x = Fs[0] * force;
+        cmd.linear.y = Fs[1] * force;
+        
+        ROS_INFO_STREAM("cmd = " << cmd);
+        cmd_pub_.publish(cmd);
+        ros::Duration(10).sleep();
     }
 
 private:
     void obstacleCallback(const sensor_msgs::ConstPtr &obs_msg){
-        double obs1[3];
+        double min_obs[3];
         
         double min_obs[0] = obs_msg->points[0].x;
         double min_obs[1] = obs_msg->points[0].y;
@@ -88,37 +107,16 @@ private:
     }
     
     double obs_[3];
+    ros::Publisher cmd_pub_;
 }
 
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "obstacle_avoidance");
     
     ros::NodeHandle node;
-    ros::Publisher cmd_pub = node.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+    apf = ArtificialPotentialField(node);
+    apf.spin();
     
-    ros::Duration(1).sleep();
-    geometry_msgs::Twist cmd;
-    cmd.linear.z = 0.15;
-    cmd_pub.publish(cmd);
-    ros::Duration(3).sleep();
-    
-    cmd.linear.z = -0.13;
-    cmd_pub.publish(cmd);
-    ros::Duration(3).sleep();
-
-    cmd.linear.z = 0;
-    cmd_pub.publish(cmd);
-    ros::Duration(3).sleep();
-     
-    /*
-    cmd.linear.x = Fs[0] * force;
-    cmd.linear.y = Fs[1] * force;
-    
-    ROS_INFO_STREAM("cmd = " << cmd);
-    cmd_pub.publish(cmd);
-    ros::Duration(10).sleep();
-    */
-
     return 0;
 }
 
