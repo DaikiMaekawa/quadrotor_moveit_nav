@@ -70,7 +70,7 @@ public:
             cmd.linear.x = Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
             
-            ROS_INFO_STREAM("cmd = " << cmd);
+            //ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
         }
@@ -85,6 +85,8 @@ private:
         min_obs[2] = obs_msg.points[0].z;
 
         float min_dist = magnitude(min_obs);
+
+        ROS_INFO_STREAM("size = " << obs_msg.channels.size());
         
         for(int i=1; i < obs_msg.channels.size(); i++){
             double obs[3];
