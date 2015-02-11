@@ -48,7 +48,7 @@ public:
         u[2] = obs[2];
         normalize(u);
         
-        const double d = sqrt(obs[0]*obs[0] + obs[1]*obs[1] + obs[2]*obs[2]);
+        const double d = magnitude(obs);
         double U = -A/pow(d, n) + B/pow(d, m);
         
         Fs[0] += U * u[0];
