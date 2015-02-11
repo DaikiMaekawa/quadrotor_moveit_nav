@@ -51,7 +51,6 @@ public:
         const double force = 0.025;
         
         while(ros::ok()){
-            
             double Fs[3];
             Fs[0] = Fs[1] = Fs[2] = 0;
             
@@ -71,7 +70,7 @@ public:
             cmd.linear.x = Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
             
-            //ROS_INFO_STREAM("cmd = " << cmd);
+            ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
             ros::spinOnce();
@@ -81,7 +80,6 @@ public:
 private:
     void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
         
-        ROS_INFO_STREAM("size = " << obs_msg->points.size());
         if(obs_msg->points.size() == 0){
             return;
         }
@@ -99,7 +97,7 @@ private:
             obs[1] = obs_msg->points[i].y;
             obs[2] = obs_msg->points[i].z;
             
-            ROS_INFO("(%f, %f)", obs[0], obs[1]);
+            //ROS_INFO("(%f, %f)", obs[0], obs[1]);
 
             double dist = magnitude(obs);
             if(dist < min_dist){
