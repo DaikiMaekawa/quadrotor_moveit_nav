@@ -70,7 +70,7 @@ public:
             Fs[1] += U * u[1];
             Fs[2] += U * u[2];
 
-            cmd.linear.x = Fs[0] * force;
+            cmd.linear.x = -Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
             
             ROS_INFO("obs = (%f, %f)", obs_[0], obs_[1]);
