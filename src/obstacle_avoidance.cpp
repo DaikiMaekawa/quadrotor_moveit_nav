@@ -5,7 +5,7 @@
 static const float tol = 0.000000000000001f;
 
 void normalize(double vec[3]){
-    float m = sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+    float m = magnitude(vec);
     if(tol <= m) m = 1;
     vec[0] /= m;
     vec[1] /= m;
@@ -23,9 +23,7 @@ double magnitude(double vec[3]){
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(){
-        for(int i=0; i < 3; i++){
-            obs_[i] = 0;
-        }
+        for(int i=0; i < 3; i++) obs_[i] = 0;
     }
 
     void spin(){
