@@ -1,5 +1,6 @@
 #include <ros/ros.h> 
 #include <geometry_msgs/Twist.h> 
+#include <sensor_msgs/PointCloud.h>
 #include <math.h>
 
 static const float tol = 0.000000000000001f;
@@ -77,7 +78,7 @@ public:
     }
 
 private:
-    void obstacleCallback(const sensor_msgs::ConstPtr &obs_msg){
+    void obstacleCallback(const sensor_msgs::PointCloud::ConstPtr &obs_msg){
         double min_obs[3];
         
         double min_obs[0] = obs_msg->points[0].x;
@@ -108,7 +109,7 @@ private:
     
     double obs_[3];
     ros::Publisher cmd_pub_;
-}
+};
 
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "obstacle_avoidance");
