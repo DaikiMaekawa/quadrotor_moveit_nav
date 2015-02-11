@@ -51,6 +51,7 @@ public:
         const double force = 0.025;
         
         while(ros::ok()){
+            
             double Fs[3];
             Fs[0] = Fs[1] = Fs[2] = 0;
             
@@ -78,22 +79,30 @@ public:
     }
 
 private:
-    void obstacleCallback(const sensor_msgs::PointCloud &obs_msg){
+    void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
         double min_obs[3];
         
-        min_obs[0] = obs_msg.points[0].x;
-        min_obs[1] = obs_msg.points[0].y;
-        min_obs[2] = obs_msg.points[0].z;
+        ROS_INFO_STREAM("size = " << obs_msg->points.size());
+        if(obs_msg->points.size()){
+            ROS_INFO("ok");
+        }else{
+            ROS_INFO("bad");
+            return;
+        }
+        
+        min_obs[0] = obs_msg->points[0].x;
+        min_obs[1] = obs_msg->points[0].y;
+        min_obs[2] = obs_msg->points[0].z;
 
         float min_dist = magnitude(min_obs);
 
-        ROS_INFO_STREAM("size = " << obs_msg.channels.size());
-        
-        for(int i=1; i < obs_msg.channels.size(); i++){
+        for(int i=1; i < obs_msg->points.size(); i++){
             double obs[3];
-            obs[0] = obs_msg.points[i].x;
-            obs[1] = obs_msg.points[i].y;
-            obs[2] = obs_msg.points[i].z;
+            obs[0] = obs_msg->points[i].x;
+            obs[1] = obs_msg->points[i].y;
+            obs[2] = obs_msg->points[i].z;
+            
+            ROS_INFO("(%f, %f)", obs[0], obs[1]);
 
             double dist = magnitude(obs);
             if(dist < min_dist){
