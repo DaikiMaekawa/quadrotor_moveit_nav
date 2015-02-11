@@ -11,7 +11,7 @@ double magnitude(double vec[3]){
 
 void normalize(double vec[3]){
     float m = magnitude(vec);
-    if(tol <= m) m = 1;
+    if(tol >= m) m = 1;
     vec[0] /= m;
     vec[1] /= m;
     vec[2] /= m;
