@@ -61,7 +61,10 @@ public:
             normalize(u);
             
             const double d = magnitude(obs_);
-            double U = -A/pow(d, n) + B/pow(d, m);
+            double U = 0;
+            if(fabs(d) > tol){
+                U = -A/pow(d, n) + B/pow(d, m);
+            }
             
             Fs[0] += U * u[0];
             Fs[1] += U * u[1];
@@ -70,6 +73,7 @@ public:
             cmd.linear.x = Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
             
+            ROS_INFO("obs = (%f, %f)", obs_[0], obs_[1]);
             ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
@@ -81,6 +85,9 @@ private:
     void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
         
         if(obs_msg->points.size() == 0){
+            obs_[0] = 0;
+            obs_[1] = 0;
+            obs_[2] = 0;
             return;
         }
         
