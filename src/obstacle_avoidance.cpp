@@ -80,7 +80,7 @@ public:
     }
 
 private:
-    void get_potential_force(double dest_lc[3], double f_out[3], double A = 1, double B = 3, double n = 1, double m = 1.5){
+    void get_potential_force(double dest_lc[3], double f_out[3], double A = 1, double B = 1, double n = 1, double m = 1){
         double u[3];
         u[0] = dest_lc[0];
         u[1] = dest_lc[1];
