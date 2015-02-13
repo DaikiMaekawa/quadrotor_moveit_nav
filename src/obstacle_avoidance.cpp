@@ -61,6 +61,17 @@ public:
             Fs[1] += f_in[1];
             Fs[2] += f_in[2];
 
+            double g[3];
+            g[0] = 0.5;
+            g[1] = 0;
+            g[2] = 0;
+
+            get_potential_force(g, f_in, 3, 0, 1.5, 1);
+
+            Fs[0] += f_in[0];
+            Fs[1] += f_in[1];
+            Fs[2] += f_in[2];
+
             cmd.linear.x = -Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
             
