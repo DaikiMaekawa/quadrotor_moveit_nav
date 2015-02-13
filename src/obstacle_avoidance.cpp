@@ -82,6 +82,24 @@ public:
     }
 
 private:
+    void get_potential_force(double dest_lc[3], double f_out[3], double A = 1, double B = 3, double n = 1, double m = 1.5){
+        double u[3];
+        u[0] = dest_lc[0];
+        u[1] = dest_lc[1];
+        u[2] = dest_lc[2];
+        normalize(u);
+
+        const double d = magnitude(dest_lc);
+        double U = 0;
+        if(fabs(d) > tol){
+            U = -A/pow(d, n) + B/pow(d, m);
+        }
+
+        f_out[0] = U * u[0];
+        f_out[1] = U * u[1];
+        f_out[2] = U * u[2];
+    }
+
     void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
         
         if(obs_msg->points.size() == 0){
