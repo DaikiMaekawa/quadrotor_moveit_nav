@@ -54,21 +54,12 @@ public:
             double Fs[3];
             Fs[0] = Fs[1] = Fs[2] = 0;
             
-            double u[3];
-            u[0] = obs_[0];
-            u[1] = obs_[1];
-            u[2] = obs_[2];
-            normalize(u);
+            double f_in[3];
+            get_potential_force(obs_, f_in, 0, 3, 1, 1.5);
             
-            const double d = magnitude(obs_);
-            double U = 0;
-            if(fabs(d) > tol){
-                U = -A/pow(d, n) + B/pow(d, m);
-            }
-            
-            Fs[0] += U * u[0];
-            Fs[1] += U * u[1];
-            Fs[2] += U * u[2];
+            Fs[0] += f_in[0];
+            Fs[1] += f_in[1];
+            Fs[2] += f_in[2];
 
             cmd.linear.x = -Fs[0] * force;
             cmd.linear.y = Fs[1] * force;
