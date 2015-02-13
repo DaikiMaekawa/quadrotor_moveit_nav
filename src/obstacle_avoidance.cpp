@@ -44,10 +44,6 @@ public:
         cmd_pub_.publish(cmd);
         ros::Duration(3).sleep();
         
-        const double A = 0;
-        const double B = 3;
-        const double n = 1;
-        const double m = 1.5;
         const double force = 0.025;
         
         while(ros::ok()){
