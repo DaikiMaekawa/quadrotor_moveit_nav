@@ -1,6 +1,6 @@
-# quadrotor_obstacle_avoidance
+# quadrotor_navigation
 
-Quadrotor Obstacle Avoidance with Artificial Potential Fields
+Navigation package using ROS for Quadrotor
 
 ## License
 
