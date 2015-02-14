@@ -95,14 +95,14 @@ catkin_package(
 #   src/${PROJECT_NAME}/quadrotor_obstacle_avoidance.cpp
 # )
 
-add_executable(obstacle_avoidance src/obstacle_avoidance.cpp)
+add_executable(apf_planner src/apf_planner.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(quadrotor_obstacle_avoidance_node quadrotor_obstacle_avoidance_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(obstacle_avoidance
+target_link_libraries(apf_planner
     ${catkin_LIBRARIES}
 )
 
