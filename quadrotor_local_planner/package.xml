@@ -2,7 +2,7 @@
 <package>
   <name>quadrotor_local_planner</name>
   <version>0.0.0</version>
-  <description>Navigation package using ROS for Quadrotor</description>
+  <description>Quadrotor Obstacle Avoidance with Artificial Potential Fields</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
