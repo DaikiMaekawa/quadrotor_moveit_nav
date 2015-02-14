@@ -7,7 +7,7 @@
    
   <!-- Spawn simulated quadrotor uav -->
   <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch" >
-    <arg name="model" value="$(find hector_quadrotor_description)/urdf/quadrotor_with_asus_with_hokuyo_utm30lx.gazebo.xacro"/> 
+    <arg name="model" value="$(find quadrotor_gazebo)/urdf/quadrotor_with_asus_with_hokuyo_utm30lx.gazebo.xacro"/> 
   </include>
    
   <!-- Start SLAM system -->
