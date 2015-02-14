@@ -62,7 +62,7 @@ public:
             g[1] = 0;
             g[2] = 0;
 
-            get_potential_force(g, f_in, 3, 0, 1.5, 1);
+            get_potential_force(g, f_in, 2, 0, 1.5, 1);
 
             Fs[0] += f_in[0];
             Fs[1] += f_in[1];
