@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>quadrotor_obstacle_avoidance</name>
+  <name>quadrotor_local_planner</name>
   <version>0.0.0</version>
-  <description>The quadrotor_obstacle_avoidance package</description>
+  <description>Navigation package using ROS for Quadrotor</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
