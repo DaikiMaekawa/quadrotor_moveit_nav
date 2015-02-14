@@ -142,7 +142,7 @@ private:
 };
 
 int main(int argc, char *argv[]){
-    ros::init(argc, argv, "obstacle_avoidance");
+    ros::init(argc, argv, "apf_planner");
     
     ros::NodeHandle node;
     ArtificialPotentialField apf = ArtificialPotentialField(node);
