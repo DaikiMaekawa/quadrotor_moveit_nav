@@ -30,7 +30,6 @@
 
   <build_depend>roscpp</build_depend>
   <run_depend>roscpp</run_depend>
-  <run_depend>hector_quadrotor_demo</run_depend>
   <buildtool_depend>catkin</buildtool_depend>
 
 
