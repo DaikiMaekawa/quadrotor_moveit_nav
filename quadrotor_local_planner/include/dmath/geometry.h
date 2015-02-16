@@ -18,6 +18,38 @@ struct Vector3D{
 
     }
 
+    Vector3D operator+=(Vector3D u){
+        x += u.x;
+        y += u.y;
+        z += u.z;
+
+        return *this;
+    }
+
+    Vector3D operator-=(Vector3D u){
+        x -= u.x;
+        y -= u.y;
+        z -= u.z;
+        
+        return *this;
+    }
+
+    Vector3D operator*=(Vector3D s){
+        x *= u.x;
+        y *= u.y;
+        z *= u.z;
+
+        return *this;
+    }
+
+    Vector3D operator/=(Vector3D s){
+        x /= u.x;
+        y /= u.y;
+        z /= u.z;
+
+        return *this;
+    }
+
 };
 
 double magnitude(Vector3D vec){
