@@ -10,24 +10,6 @@
 
 #include "dmath/geometry.h"
 
-static const float tol = 0.000000000000001f;
-
-double magnitude(double vec[3]){
-    return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
-}
-
-void normalize(double vec[3]){
-    float m = magnitude(vec);
-    if(tol >= m) m = 1;
-    vec[0] /= m;
-    vec[1] /= m;
-    vec[2] /= m;
-
-    if(fabs(vec[0]) < tol) vec[0] = 0.0f;
-    if(fabs(vec[1]) < tol) vec[1] = 0.0f;
-    if(fabs(vec[2]) < tol) vec[2] = 0.0f;
-}
-
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
@@ -55,31 +37,17 @@ public:
         const double force = 0.025;
         
         while(ros::ok()){
-            double Fs[3];
-            Fs[0] = Fs[1] = Fs[2] = 0;
+            dmath::Vector3D Fs;
+            Fs += get_potential_force(obs_, 0, 3, 1, 2.0);
+
+            dmath::Vector3D g;
+            Fs += get_potential_force(g, 2, 0, 1.5, 1);
             
-            double f_in[3];
-            get_potential_force(obs_, f_in, 0, 3, 1, 2.0);
-            
-            Fs[0] += f_in[0];
-            Fs[1] += f_in[1];
-            Fs[2] += f_in[2];
-
-            double g[3];
-            g[0] = 0;
-            g[1] = 0;
-            g[2] = 0;
-
-            get_potential_force(g, f_in, 2, 0, 1.5, 1);
-
-            Fs[0] += f_in[0];
-            Fs[1] += f_in[1];
-            Fs[2] += f_in[2];
-
-            cmd.linear.x = Fs[1] * force;
+            dmath::Vector3D vel = Fs * force;
+            //cmd.linear.x = Fs[1] * force;
             //cmd.linear.y = Fs[1] * force;
             
-            ROS_INFO("obs = (%f, %f)", obs_[0], obs_[1]);
+            ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
             ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
@@ -88,22 +56,17 @@ public:
     }
 
 private:
-    void get_potential_force(double dest_lc[3], double f_out[3], double A = 1, double B = 1, double n = 1, double m = 1){
-        double u[3];
-        u[0] = dest_lc[0];
-        u[1] = dest_lc[1];
-        u[2] = dest_lc[2];
+    Vector3D get_potential_force(const dmath::Vector3D &dest_lc, double A = 1, double B = 1, double n = 1, double m = 1){
+        Vector3D u = dest_lc;
         normalize(u);
 
         const double d = magnitude(dest_lc);
         double U = 0;
-        if(fabs(d) > tol){
+        if(fabs(d) > dmath::tol){
             U = -A/pow(d, n) + B/pow(d, m);
         }
-
-        f_out[0] = U * u[0];
-        f_out[1] = U * u[1];
-        f_out[2] = U * u[2];
+        
+        return U * u;
     }
 
     void obstacleCallback(const sensor_msgs::PointCloud2Ptr &obs_msg){
@@ -147,7 +110,7 @@ private:
         obs_[2] = min_obs[2];
     }
     
-    double obs_[3];
+    dmath::Vector3D obs_;
     ros::Publisher cmd_pub_;
     ros::Subscriber obs_sub_;
     tf::TransformListener tf_listener_;
