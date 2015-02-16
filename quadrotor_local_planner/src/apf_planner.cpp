@@ -1,6 +1,8 @@
 #include <ros/ros.h> 
 #include <geometry_msgs/Twist.h> 
+#include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/point_cloud_conversion.h>
 #include <math.h>
 
 static const float tol = 0.000000000000001f;
@@ -25,7 +27,7 @@ class ArtificialPotentialField{
 public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
-        obs_sub_(node.subscribe("slam_cloud", 10, &ArtificialPotentialField::obstacleCallback, this))
+        obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
     {
         for(int i=0; i < 3; i++) obs_[i] = 0;
@@ -98,9 +100,11 @@ private:
         f_out[2] = U * u[2];
     }
 
-    void obstacleCallback(const sensor_msgs::PointCloudPtr &obs_msg){
-        
-        if(obs_msg->points.size() == 0){
+    void obstacleCallback(const sensor_msgs::PointCloud2Ptr &obs_msg){
+        sensor_msgs::PointCloud obs_data;
+        sensor_msgs::convertPointCloud2ToPointCloud(*obs_msg, obs_data);
+
+        if(obs_data.points.size() == 0){
             obs_[0] = 0;
             obs_[1] = 0;
             obs_[2] = 0;
@@ -108,17 +112,17 @@ private:
         }
         
         double min_obs[3];
-        min_obs[0] = obs_msg->points[0].x;
-        min_obs[1] = obs_msg->points[0].y;
-        min_obs[2] = obs_msg->points[0].z;
+        min_obs[0] = obs_data.points[0].x;
+        min_obs[1] = obs_data.points[0].y;
+        min_obs[2] = obs_data.points[0].z;
 
         float min_dist = magnitude(min_obs);
 
-        for(int i=1; i < obs_msg->points.size(); i++){
+        for(int i=1; i < obs_data.points.size(); i++){
             double obs[3];
-            obs[0] = obs_msg->points[i].x;
-            obs[1] = obs_msg->points[i].y;
-            obs[2] = obs_msg->points[i].z;
+            obs[0] = obs_data.points[i].x;
+            obs[1] = obs_data.points[i].y;
+            obs[2] = obs_data.points[i].z;
             
             //ROS_INFO("(%f, %f)", obs[0], obs[1]);
 
