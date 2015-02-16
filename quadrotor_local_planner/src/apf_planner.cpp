@@ -35,20 +35,21 @@ public:
         cmd_pub_.publish(cmd);
         ros::Duration(3).sleep();
         
-        const double force = 0.025;
+        const double force = 0.0025;
         
         while(ros::ok()){
             dmath::Vector3D Fs;
             for(int i=0; i < obstacles_.size(); i++){
-                Fs += get_potential_force(obstacles_[i], 0, 3, 1, 2.0);
+                Fs += get_potential_force(obstacles_[i], 0, 0.02, 1.0, 1.5);
             }
 
-            dmath::Vector3D g;
-            Fs += get_potential_force(g, 2, 0, 1.5, 1);
+            //dmath::Vector3D g;
+            //Fs += get_potential_force(g, 2, 0, 1.5, 1);
             
             dmath::Vector3D vel = Fs * force;
-            cmd.linear.x = Fs.y * force;
-            cmd.linear.y = Fs.x * force;
+            cmd.linear.x = vel.y;
+            //cmd.linear.x = Fs.y * force;
+            //cmd.linear.y = Fs.x * force;
             
             //ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
             ROS_INFO_STREAM("cmd = " << cmd);
@@ -88,8 +89,11 @@ private:
             obs.x = obs_base.points[i].x;
             obs.y = obs_base.points[i].y;
             obs.z = obs_base.points[i].z;
-            
-            obs_vec.push_back(obs);
+
+            const double dist = magnitude(obs);
+            if(dist < 1.0){
+                obs_vec.push_back(obs);
+            }
         }
 
         obstacles_ = obs_vec;
