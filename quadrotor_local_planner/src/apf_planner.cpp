@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "apf_planner");
     
     ros::NodeHandle node;
-    ArtificialPotentialField apf = ArtificialPotentialField(node);
+    ArtificialPotentialField apf(node);
     apf.spin();
     
     return 0;
