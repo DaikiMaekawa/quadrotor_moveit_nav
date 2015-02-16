@@ -86,16 +86,17 @@ catkin_package(
 ## Build ##
 ###########
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 
 ## Declare a cpp library
 # add_library(quadrotor_obstacle_avoidance
 #   src/${PROJECT_NAME}/quadrotor_obstacle_avoidance.cpp
 # )
 
-add_executable(apf_planner src/apf_planner.cpp)
+add_executable(apf_planner 
+    include/dmath/geometry.h
+    src/apf_planner.cpp
+)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
