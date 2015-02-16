@@ -29,6 +29,7 @@ void normalize(double vec[3]){
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
+        base_link_("base_frame"),
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
         obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
