@@ -8,6 +8,8 @@
 #include <string>
 #include <math.h>
 
+#include "dmath/geometry.h"
+
 static const float tol = 0.000000000000001f;
 
 double magnitude(double vec[3]){
