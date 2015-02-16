@@ -3,6 +3,9 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/point_cloud_conversion.h>
+#include <tf/transform_listener.h>
+
+#include <string>
 #include <math.h>
 
 static const float tol = 0.000000000000001f;
@@ -26,6 +29,7 @@ void normalize(double vec[3]){
 class ArtificialPotentialField{
 public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
+        base_link_("base_link"),
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
         obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
@@ -53,14 +57,14 @@ public:
             Fs[0] = Fs[1] = Fs[2] = 0;
             
             double f_in[3];
-            get_potential_force(obs_, f_in, 0, 2, 1, 1.5);
+            get_potential_force(obs_, f_in, 0, 3, 1, 2.0);
             
             Fs[0] += f_in[0];
             Fs[1] += f_in[1];
             Fs[2] += f_in[2];
 
             double g[3];
-            g[0] = 0.5;
+            g[0] = 0;
             g[1] = 0;
             g[2] = 0;
 
@@ -70,8 +74,8 @@ public:
             Fs[1] += f_in[1];
             Fs[2] += f_in[2];
 
-            cmd.linear.x = -Fs[0] * force;
-            cmd.linear.y = Fs[1] * force;
+            cmd.linear.x = Fs[1] * force;
+            //cmd.linear.y = Fs[1] * force;
             
             ROS_INFO("obs = (%f, %f)", obs_[0], obs_[1]);
             ROS_INFO_STREAM("cmd = " << cmd);
@@ -101,10 +105,11 @@ private:
     }
 
     void obstacleCallback(const sensor_msgs::PointCloud2Ptr &obs_msg){
-        sensor_msgs::PointCloud obs_data;
-        sensor_msgs::convertPointCloud2ToPointCloud(*obs_msg, obs_data);
+        sensor_msgs::PointCloud obs_lsr, obs_base;
+        sensor_msgs::convertPointCloud2ToPointCloud(*obs_msg, obs_lsr);
+        tf_listener_.transformPointCloud(obs_lsr.header.frame_id, obs_lsr.header.stamp, obs_lsr, base_link_, obs_base);
 
-        if(obs_data.points.size() == 0){
+        if(obs_base.points.size() == 0){
             obs_[0] = 0;
             obs_[1] = 0;
             obs_[2] = 0;
@@ -112,17 +117,17 @@ private:
         }
         
         double min_obs[3];
-        min_obs[0] = obs_data.points[0].x;
-        min_obs[1] = obs_data.points[0].y;
-        min_obs[2] = obs_data.points[0].z;
+        min_obs[0] = obs_base.points[0].x;
+        min_obs[1] = obs_base.points[0].y;
+        min_obs[2] = obs_base.points[0].z;
 
         float min_dist = magnitude(min_obs);
 
-        for(int i=1; i < obs_data.points.size(); i++){
+        for(int i=1; i < obs_base.points.size(); i++){
             double obs[3];
-            obs[0] = obs_data.points[i].x;
-            obs[1] = obs_data.points[i].y;
-            obs[2] = obs_data.points[i].z;
+            obs[0] = obs_base.points[i].x;
+            obs[1] = obs_base.points[i].y;
+            obs[2] = obs_base.points[i].z;
             
             //ROS_INFO("(%f, %f)", obs[0], obs[1]);
 
@@ -143,13 +148,15 @@ private:
     double obs_[3];
     ros::Publisher cmd_pub_;
     ros::Subscriber obs_sub_;
+    tf::TransformListener tf_listener_;
+    std::string base_link_;
 };
 
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "apf_planner");
     
     ros::NodeHandle node;
-    ArtificialPotentialField apf = ArtificialPotentialField(node);
+    ArtificialPotentialField apf(node);
     apf.spin();
     
     return 0;
