@@ -49,6 +49,7 @@ public:
             dmath::Vector3D vel = Fs * force;
             cmd.linear.x = vel.y;
             cmd.linear.y = vel.x;
+            cmd.linear.z = vel.z;
             
             ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
