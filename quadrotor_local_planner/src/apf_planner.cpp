@@ -57,7 +57,7 @@ public:
 
 private:
     dmath::Vector3D get_potential_force(const dmath::Vector3D &dest_lc, double A = 1, double B = 1, double n = 1, double m = 1){
-        Vector3D u = dest_lc;
+        dmath::Vector3D u = dest_lc;
         u = normalize(u);
 
         const double d = magnitude(dest_lc);
