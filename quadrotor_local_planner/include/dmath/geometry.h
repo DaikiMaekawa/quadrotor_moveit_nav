@@ -34,18 +34,18 @@ struct Vector3D{
         return *this;
     }
 
-    Vector3D operator*=(Vector3D s){
-        x *= u.x;
-        y *= u.y;
-        z *= u.z;
+    Vector3D operator*=(double s){
+        x *= s;
+        y *= s;
+        z *= s;
 
         return *this;
     }
 
-    Vector3D operator/=(Vector3D s){
-        x /= u.x;
-        y /= u.y;
-        z /= u.z;
+    Vector3D operator/=(double s){
+        x /= s;
+        y /= s;
+        z /= s;
 
         return *this;
     }
