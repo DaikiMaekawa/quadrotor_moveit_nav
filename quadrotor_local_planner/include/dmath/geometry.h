@@ -72,4 +72,29 @@ Vector3D normalize(const Vector3D &vec_in){
     return vec_out;
 }
 
-};
+}; //namespace dmath
+
+dmath::Vector3D operator*(float s, dmath::Vector3D u){
+    return dmath::Vector3D(u.x*s, u.y*s, u.z*s);
+}
+
+dmath::Vector3D operator*(dmath::Vector3D u, float s){
+    return dmath::Vector3D(u.x*s, u.y*s, u.z*s);
+}
+
+float operator*(dmath::Vector3D u, dmath::Vector3D v){
+    return u.x*v.x + u.y*v.y + u.z*v.z;
+}
+
+dmath::Vector3D operator/(dmath::Vector3D u, float s){
+    return dmath::Vector3D(u.x/s, u.y/s, u.z/s);
+}
+
+dmath::Vector3D operator-(dmath::Vector3D u, dmath::Vector3D v){
+    return dmath::Vector3D(u.x-v.x, u.y-v.y, u.z-v.z);
+}
+
+dmath::Vector3D operator+(dmath::Vector3D u, dmath::Vector3D v){
+    return dmath::Vector3D(u.x+v.x, u.y+v.y, u.z+v.z);
+}
+
