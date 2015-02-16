@@ -7,6 +7,7 @@
 
 #include <string>
 #include <math.h>
+#include <vector>
 
 #include "dmath/geometry.h"
 
@@ -38,7 +39,9 @@ public:
         
         while(ros::ok()){
             dmath::Vector3D Fs;
-            Fs += get_potential_force(obs_, 0, 3, 1, 2.0);
+            for(int i=0; i < obstacles_.size(); i++){
+                Fs += get_potential_force(obstacles_[i], 0, 3, 1, 2.0);
+            }
 
             dmath::Vector3D g;
             Fs += get_potential_force(g, 2, 0, 1.5, 1);
@@ -47,7 +50,7 @@ public:
             cmd.linear.x = Fs.y * force;
             cmd.linear.y = Fs.x * force;
             
-            ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
+            //ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
             ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
@@ -75,12 +78,23 @@ private:
         tf_listener_.transformPointCloud(obs_lsr.header.frame_id, obs_lsr.header.stamp, obs_lsr, base_link_, obs_base);
 
         if(obs_base.points.size() == 0){
-            obs_.x = 0;
-            obs_.y = 0;
-            obs_.z = 0;
+            obstacles_.clear();
             return;
         }
         
+        std::vector<dmath::Vector3D> obs_vec;
+        for(int i=0; i < obs_base.points.size(); i++){
+            dmath::Vector3D obs;
+            obs.x = obs_base.points[i].x;
+            obs.y = obs_base.points[i].y;
+            obs.z = obs_base.points[i].z;
+            
+            obs_vec.push_back(obs);
+        }
+
+        obstacles_ = obs_vec;
+
+        /*
         dmath::Vector3D min_obs;
         min_obs.x = obs_base.points[0].x;
         min_obs.y = obs_base.points[0].y;
@@ -108,10 +122,10 @@ private:
         obs_.x = min_obs.x;
         obs_.y = min_obs.y;
         obs_.z = min_obs.z;
-
+        */
     }
     
-    dmath::Vector3D obs_;
+    std::vector<dmath::Vector3D> obstacles_;
     ros::Publisher cmd_pub_;
     ros::Subscriber obs_sub_;
     tf::TransformListener tf_listener_;
