@@ -40,7 +40,7 @@ public:
         while(ros::ok()){
             dmath::Vector3D Fs;
             for(int i=0; i < obstacles_.size(); i++){
-                Fs += get_potential_force(obstacles_[i], 0, 0.02, 1.0, 1.5);
+                Fs += get_potential_force(obstacles_[i], 0, 0.005, 1.0, 1.5);
             }
 
             //dmath::Vector3D g;
@@ -48,10 +48,8 @@ public:
             
             dmath::Vector3D vel = Fs * force;
             cmd.linear.x = vel.y;
-            //cmd.linear.x = Fs.y * force;
-            //cmd.linear.y = Fs.x * force;
+            cmd.linear.y = vel.x;
             
-            //ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
             ROS_INFO_STREAM("cmd = " << cmd);
             cmd_pub_.publish(cmd);
             r.sleep();
