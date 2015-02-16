@@ -58,7 +58,7 @@ public:
 private:
     Vector3D get_potential_force(const dmath::Vector3D &dest_lc, double A = 1, double B = 1, double n = 1, double m = 1){
         Vector3D u = dest_lc;
-        normalize(u);
+        u = normalize(u);
 
         const double d = magnitude(dest_lc);
         double U = 0;
@@ -75,39 +75,40 @@ private:
         tf_listener_.transformPointCloud(obs_lsr.header.frame_id, obs_lsr.header.stamp, obs_lsr, base_link_, obs_base);
 
         if(obs_base.points.size() == 0){
-            obs_[0] = 0;
-            obs_[1] = 0;
-            obs_[2] = 0;
+            obs_.x = 0;
+            obs_.y = 0;
+            obs_.z = 0;
             return;
         }
         
-        double min_obs[3];
-        min_obs[0] = obs_base.points[0].x;
-        min_obs[1] = obs_base.points[0].y;
-        min_obs[2] = obs_base.points[0].z;
+        dmath::Vector3D min_obs;
+        min_obs.x = obs_base.points[0].x;
+        min_obs.y = obs_base.points[0].y;
+        min_obs.z = obs_base.points[0].z;
 
         float min_dist = magnitude(min_obs);
 
         for(int i=1; i < obs_base.points.size(); i++){
-            double obs[3];
-            obs[0] = obs_base.points[i].x;
-            obs[1] = obs_base.points[i].y;
-            obs[2] = obs_base.points[i].z;
+            dmath::Vector3D obs;
+            obs.x = obs_base.points[i].x;
+            obs.y = obs_base.points[i].y;
+            obs.z = obs_base.points[i].z;
             
             //ROS_INFO("(%f, %f)", obs[0], obs[1]);
 
             double dist = magnitude(obs);
             if(dist < min_dist){
-                min_obs[0] = obs[0];
-                min_obs[1] = obs[1];
-                min_obs[2] = obs[2];
+                min_obs.x = obs.x;
+                min_obs.y = obs.y;
+                min_obs.z = obs.z;
                 min_dist = dist;
             }
         }
 
-        obs_[0] = min_obs[0];
-        obs_[1] = min_obs[1];
-        obs_[2] = min_obs[2];
+        obs_.x = min_obs.x;
+        obs_.y = min_obs.y;
+        obs_.z = min_obs.z;
+
     }
     
     dmath::Vector3D obs_;
