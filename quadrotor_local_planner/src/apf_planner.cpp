@@ -57,7 +57,7 @@ public:
             Fs[0] = Fs[1] = Fs[2] = 0;
             
             double f_in[3];
-            get_potential_force(obs_, f_in, 0, 2, 1, 1.5);
+            get_potential_force(obs_, f_in, 0, 3, 1, 2.0);
             
             Fs[0] += f_in[0];
             Fs[1] += f_in[1];
