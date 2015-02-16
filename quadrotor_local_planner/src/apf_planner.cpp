@@ -44,8 +44,8 @@ public:
             Fs += get_potential_force(g, 2, 0, 1.5, 1);
             
             dmath::Vector3D vel = Fs * force;
-            //cmd.linear.x = Fs[1] * force;
-            //cmd.linear.y = Fs[1] * force;
+            cmd.linear.x = Fs.y * force;
+            cmd.linear.y = Fs.x * force;
             
             ROS_INFO("obs = (%f, %f)", obs_.x, obs_.y);
             ROS_INFO_STREAM("cmd = " << cmd);
