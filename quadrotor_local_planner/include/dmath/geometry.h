@@ -53,7 +53,7 @@ struct Vector3D{
 };
 
 double magnitude(Vector3D vec){
-    return sqrt(x*x + y*y + z*z);
+    return sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
 }
 
 Vector3D normalize(const Vector3D &vec_in){
