@@ -18,7 +18,7 @@ public:
         obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
     {
-        for(int i=0; i < 3; i++) obs_[i] = 0;
+
     }
 
     void spin(){
