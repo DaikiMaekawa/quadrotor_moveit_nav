@@ -18,6 +18,10 @@ struct Vector3D{
 
     }
 
+    Vector3D operator-(){
+        return Vector3D(-x, -y, -z);
+    }
+
     Vector3D operator+=(Vector3D u){
         x += u.x;
         y += u.y;
