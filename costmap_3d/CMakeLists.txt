@@ -103,15 +103,15 @@ include_directories(
 #   src/${PROJECT_NAME}/costmap_3d.cpp
 # )
 
-add_executable(local_map_publisher
-    src/local_map_publisher.cpp
+add_executable(local_map_3d_publisher
+    src/local_map_3d_publisher.cpp
 )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(costmap_3d_node costmap_3d_generate_messages_cpp)
 
-target_link_libraries(local_map_publisher
+target_link_libraries(local_map_3d_publisher
     ${catkin_LIBRARIES}
     ${OCTOMAP_LIBRARIES}
 )
