@@ -6,8 +6,6 @@ project(quadrotor_local_planner)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED roscpp tf octomap_msgs)
 
-find_package(octomap REQUIRED)
-
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -78,10 +76,6 @@ find_package(octomap REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES quadrotor_obstacle_avoidance
-#  CATKIN_DEPENDS other_catkin_pkg
-   DEPENDS octomap
 )
 
 ###########
@@ -91,7 +85,6 @@ catkin_package(
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${OCTOMAP_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -99,9 +92,6 @@ include_directories(
 #   src/${PROJECT_NAME}/quadrotor_obstacle_avoidance.cpp
 # )
 
-add_executable(local_map_publisher
-    src/local_map_publisher.cpp
-)
 
 add_executable(apf_planner 
     include/dmath/geometry.h
@@ -113,11 +103,6 @@ add_executable(apf_planner
 # add_dependencies(quadrotor_obstacle_avoidance_node quadrotor_obstacle_avoidance_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-
-target_link_libraries(local_map_publisher
-    ${catkin_LIBRARIES}
-    ${OCTOMAP_LIBRARIES}
-)
 
 target_link_libraries(apf_planner
     ${catkin_LIBRARIES}
