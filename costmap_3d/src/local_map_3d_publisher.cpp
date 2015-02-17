@@ -11,7 +11,7 @@ void globalMapCallback(const octomap_msgs::OctomapPtr &map_msg){
 */
 
 int main(int argc, char *argv[]){
-    ros::init(argc, argv, "local_map_publisher");
+    ros::init(argc, argv, "local_map_3d_publisher");
 
     octomap::OcTree tree(0.1);
 
