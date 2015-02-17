@@ -24,6 +24,12 @@ int main(int argc, char *argv[]){
         }
     }
 
-    map_lc_pub.publish(map_lc);
-    ros::spin();
+    ros::Rate rate(10);
+
+    while(ros::ok()){
+        map_lc_pub.publish(map_lc);
+        ros::spinOnce();
+        rate.sleep();
+    }
+
 }
