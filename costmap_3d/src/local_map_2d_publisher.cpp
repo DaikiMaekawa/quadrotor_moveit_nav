@@ -9,11 +9,11 @@ int main(int argc, char *argv[]){
     const int size = 5;
 
     nav_msgs::OccupancyGrid map_lc;
-    map_lc.resolution = 2;
-    map_lc.frame_id = "/world";
+    map_lc.info.resolution = 2;
+    map_lc.header.frame_id = "/world";
+    map_lc.header.stamp = ros::Time::now();
     map_lc.info.origin.position.x = -size/2;
     map_lc.info.origin.position.y = -size/2;
-    map_lc.header.stamp = ros::Time::now();
     map_lc.info.width = size;
     map_lc.info.height = size;
     map_lc.data.resize(size * size);
