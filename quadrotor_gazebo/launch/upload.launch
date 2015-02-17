@@ -9,15 +9,5 @@
   <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch" >
     <arg name="model" value="$(find quadrotor_gazebo)/urdf/quadrotor_with_asus_with_hokuyo_utm30lx.gazebo.xacro"/> 
   </include>
-   
-  <!-- Start SLAM system -->
-  <include file="$(find hector_mapping)/launch/mapping_default.launch">
-    <arg name="odom_frame" value="world"/>
-  </include>
- 
-  <!-- Start GeoTIFF mapper -->
-  <include file="$(find hector_geotiff)/launch/geotiff_mapper.launch">
-    <arg name="trajectory_publish_rate" value="4"/> 
-  </include>
-   
+     
 </launch>
