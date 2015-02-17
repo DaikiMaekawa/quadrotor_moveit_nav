@@ -12,4 +12,10 @@
     <arg name="trajectory_publish_rate" value="4"/> 
   </include>
 
+  <node name="octomap_server" pkg="octomap_server" type="octomap_server_node">
+    <remap from="cloud_in" to="/camera/depth/points"/>
+    <param name="latch" value="false"/>
+    <param name="resolution" value="0.5"/>
+  </node>
+
 </launch>
