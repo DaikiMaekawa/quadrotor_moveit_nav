@@ -93,6 +93,10 @@ include_directories(include)
 #   src/${PROJECT_NAME}/quadrotor_obstacle_avoidance.cpp
 # )
 
+add_executable(local_map_publisher
+    src/local_map_publisher.cpp
+)
+
 add_executable(apf_planner 
     include/dmath/geometry.h
     src/apf_planner.cpp
@@ -103,6 +107,11 @@ add_executable(apf_planner
 # add_dependencies(quadrotor_obstacle_avoidance_node quadrotor_obstacle_avoidance_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
+
+target_link_libraries(local_map_publisher
+    ${catkin_LIBRARIES}
+)
+
 target_link_libraries(apf_planner
     ${catkin_LIBRARIES}
 )
