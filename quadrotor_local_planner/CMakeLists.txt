@@ -4,7 +4,9 @@ project(quadrotor_local_planner)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED roscpp tf)
+find_package(catkin REQUIRED roscpp tf octomap_msgs)
+
+find_package(octomap REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -79,14 +81,17 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES quadrotor_obstacle_avoidance
 #  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+   DEPENDS octomap
 )
 
 ###########
 ## Build ##
 ###########
 
-include_directories(include)
+include_directories(
+    ${catkin_INCLUDE_DIRS}
+    ${OCTOMAP_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
 # add_library(quadrotor_obstacle_avoidance
@@ -110,6 +115,7 @@ add_executable(apf_planner
 
 target_link_libraries(local_map_publisher
     ${catkin_LIBRARIES}
+    ${OCTOMAP_LIBRARIES}
 )
 
 target_link_libraries(apf_planner
