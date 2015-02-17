@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
+find_package(octomap REQUIRED)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -81,7 +83,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES costmap_3d
 #  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
+   DEPENDS octomap
 )
 
 ###########
@@ -93,6 +95,7 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -100,17 +103,18 @@ include_directories(
 #   src/${PROJECT_NAME}/costmap_3d.cpp
 # )
 
-## Declare a cpp executable
-# add_executable(costmap_3d_node src/costmap_3d_node.cpp)
+add_executable(local_map_publisher
+    src/local_map_publisher.cpp
+)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(costmap_3d_node costmap_3d_generate_messages_cpp)
 
-## Specify libraries to link a library or executable target against
-# target_link_libraries(costmap_3d_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(local_map_publisher
+    ${catkin_LIBRARIES}
+    ${OCTOMAP_LIBRARIES}
+)
 
 #############
 ## Install ##
