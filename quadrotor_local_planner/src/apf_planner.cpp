@@ -54,7 +54,13 @@ public:
                     p_in.point.x = it.getX();
                     p_in.point.y = it.getY();
                     p_in.point.z = it.getZ();
-                    tf_listener_.transformPoint(base_link_, p_in, p_out);
+                    
+                    try{
+                        tf_listener_.transformPoint(base_link_, p_in, p_out);
+                    }catch(tf::TransformException &ex){
+                        ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
+                    }
+
                     obstacles_lc.push_back(dmath::Vector3D(p_out.point.x, p_out.point.y, p_out.point.z));
                 }
                 ROS_INFO_STREAM("size = " << obstacles_lc.size());
