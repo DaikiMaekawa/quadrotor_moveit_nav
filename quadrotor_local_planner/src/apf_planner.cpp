@@ -43,11 +43,16 @@ public:
         
         while(ros::ok()){
             if(collision_map_.stamp != ros::Duration(0)){
+                std::vector<dmath::Vector3D> obstacles;
                 octomap::OcTree tree = octomap_msgs::msgToMap(collision_map_);
+                octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
+                for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
+                    obstacles.push_back(dmath::Vector3D(it.getX(), it.getY(), it.getZ()));
+                }
                 
                 dmath::Vector3D Fs;
-                for(int i=0; i < obstacles_.size(); i++){
-                    Fs += get_potential_force(obstacles_[i], 0, 0.005, 1.0, 1.5);
+                for(int i=0; i < obstacles.size(); i++){
+                    Fs += get_potential_force(obstacles[i], 0, 0.005, 1.0, 1.5);
                 }
 
                 //dmath::Vector3D g;
@@ -85,7 +90,6 @@ private:
     }
     
     octomap_msgs::Octomap collision_map_;
-    std::vector<dmath::Vector3D> obstacles_;
     ros::Publisher cmd_pub_;
     ros::Subscriber obs_sub_;
     tf::TransformListener tf_listener_;
