@@ -8,6 +8,7 @@
 #include <octomap/OcTree.h>
 #include <octomap_msgs/Octomap.h>
 #include <octomap_msgs/conversions.h>
+#include <geometry_msgs/PointStamped.h>
 
 #include <string>
 #include <math.h>
@@ -39,20 +40,28 @@ public:
         cmd_pub_.publish(cmd);
         ros::Duration(3).sleep();
         
-        const double force = 0.0025;
+        const double force = 0.025;
         
         while(ros::ok()){
             if(collision_map_.header.stamp != ros::Time(0)){
-                std::vector<dmath::Vector3D> obstacles;
+                std::vector<dmath::Vector3D> obstacles_lc;
+                std::string map_frame = collision_map_.header.frame_id;
                 octomap::OcTree *tree = dynamic_cast<octomap::OcTree*>(octomap_msgs::msgToMap(collision_map_));
                 octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
                 for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
-                    obstacles.push_back(dmath::Vector3D(it.getX(), it.getY(), it.getZ()));
+                    geometry_msgs::PointStamped p_in, p_out;
+                    p_in.header.frame_id = map_frame;
+                    p_in.point.x = it.getX();
+                    p_in.point.y = it.getY();
+                    p_in.point.z = it.getZ();
+                    tf_listener_.transformPoint(base_link_, p_in, p_out);
+                    obstacles_lc.push_back(dmath::Vector3D(p_out.point.x, p_out.point.y, p_out.point.z));
                 }
+                ROS_INFO_STREAM("size = " << obstacles_lc.size());
                 
                 dmath::Vector3D Fs;
-                for(int i=0; i < obstacles.size(); i++){
-                    Fs += get_potential_force(obstacles[i], 0, 0.005, 1.0, 1.5);
+                for(int i=0; i < obstacles_lc.size(); i++){
+                    Fs += get_potential_force(obstacles_lc[i], 0, 0.5, 1.0, 1.5);
                 }
 
                 //dmath::Vector3D g;
