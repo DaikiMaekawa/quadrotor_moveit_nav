@@ -23,7 +23,7 @@ public:
         obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
     {
-        collision_map_.stamp = ros::Duration(0);
+        collision_map_.header.stamp = ros::Time(0);
     }
 
     void spin(){
@@ -42,7 +42,7 @@ public:
         const double force = 0.0025;
         
         while(ros::ok()){
-            if(collision_map_.stamp != ros::Duration(0)){
+            if(collision_map_.header.stamp != ros::Time(0)){
                 std::vector<dmath::Vector3D> obstacles;
                 octomap::OcTree tree = octomap_msgs::msgToMap(collision_map_);
                 octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
