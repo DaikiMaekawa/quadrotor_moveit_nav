@@ -44,7 +44,7 @@ public:
         while(ros::ok()){
             if(collision_map_.header.stamp != ros::Time(0)){
                 std::vector<dmath::Vector3D> obstacles;
-                octomap::OcTree tree = octomap_msgs::msgToMap(collision_map_);
+                octomap::OcTree *tree = dynamic_cast<octomap::OcTree*>(octomap_msgs::msgToMap(collision_map_));
                 octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
                 for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
                     obstacles.push_back(dmath::Vector3D(it.getX(), it.getY(), it.getZ()));
