@@ -88,7 +88,11 @@ catkin_package(
 ## Build ##
 ###########
 
-include_directories(include)
+include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${OCTOMAP_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
 # add_library(quadrotor_obstacle_avoidance
