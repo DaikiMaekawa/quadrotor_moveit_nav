@@ -4,6 +4,10 @@
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 #include <tf/transform_listener.h>
+#include <octomap/octomap.h>
+#include <octomap/OcTree.h>
+#include <octomap_msgs/Octomap.h>
+#include <octomap_msgs/conversions.h>
 
 #include <string>
 #include <math.h>
@@ -19,7 +23,7 @@ public:
         obs_sub_(node.subscribe("/camera/depth/points", 10, &ArtificialPotentialField::obstacleCallback, this))
 
     {
-
+        collision_map_.stamp = ros::Duration(0);
     }
 
     void spin(){
@@ -38,21 +42,23 @@ public:
         const double force = 0.0025;
         
         while(ros::ok()){
-            dmath::Vector3D Fs;
-            for(int i=0; i < obstacles_.size(); i++){
-                Fs += get_potential_force(obstacles_[i], 0, 0.005, 1.0, 1.5);
-            }
+            if(collision_map_.stamp != ros::Duration(0)){
+                dmath::Vector3D Fs;
+                for(int i=0; i < obstacles_.size(); i++){
+                    Fs += get_potential_force(obstacles_[i], 0, 0.005, 1.0, 1.5);
+                }
 
-            //dmath::Vector3D g;
-            //Fs += get_potential_force(g, 2, 0, 1.5, 1);
-            
-            dmath::Vector3D vel = Fs * force;
-            cmd.linear.x = vel.y;
-            cmd.linear.y = vel.x;
-            cmd.linear.z = vel.z;
-            
-            ROS_INFO_STREAM("cmd = " << cmd);
-            cmd_pub_.publish(cmd);
+                //dmath::Vector3D g;
+                //Fs += get_potential_force(g, 2, 0, 1.5, 1);
+                
+                dmath::Vector3D vel = Fs * force;
+                cmd.linear.x = vel.y;
+                cmd.linear.y = vel.x;
+                cmd.linear.z = vel.z;
+                
+                ROS_INFO_STREAM("cmd = " << cmd);
+                cmd_pub_.publish(cmd);
+            }
             r.sleep();
             ros::spinOnce();
         }
@@ -72,62 +78,11 @@ private:
         return U * u;
     }
 
-    void obstacleCallback(const sensor_msgs::PointCloud2Ptr &obs_msg){
-        sensor_msgs::PointCloud obs_lsr, obs_base;
-        sensor_msgs::convertPointCloud2ToPointCloud(*obs_msg, obs_lsr);
-        tf_listener_.transformPointCloud(obs_lsr.header.frame_id, obs_lsr.header.stamp, obs_lsr, base_link_, obs_base);
-
-        if(obs_base.points.size() == 0){
-            obstacles_.clear();
-            return;
-        }
-        
-        std::vector<dmath::Vector3D> obs_vec;
-        for(int i=0; i < obs_base.points.size(); i++){
-            dmath::Vector3D obs;
-            obs.x = obs_base.points[i].x;
-            obs.y = obs_base.points[i].y;
-            obs.z = obs_base.points[i].z;
-
-            const double dist = magnitude(obs);
-            if(dist < 1.0){
-                obs_vec.push_back(obs);
-            }
-        }
-
-        obstacles_ = obs_vec;
-
-        /*
-        dmath::Vector3D min_obs;
-        min_obs.x = obs_base.points[0].x;
-        min_obs.y = obs_base.points[0].y;
-        min_obs.z = obs_base.points[0].z;
-
-        float min_dist = magnitude(min_obs);
-
-        for(int i=1; i < obs_base.points.size(); i++){
-            dmath::Vector3D obs;
-            obs.x = obs_base.points[i].x;
-            obs.y = obs_base.points[i].y;
-            obs.z = obs_base.points[i].z;
-            
-            //ROS_INFO("(%f, %f)", obs[0], obs[1]);
-
-            double dist = magnitude(obs);
-            if(dist < min_dist){
-                min_obs.x = obs.x;
-                min_obs.y = obs.y;
-                min_obs.z = obs.z;
-                min_dist = dist;
-            }
-        }
-
-        obs_.x = min_obs.x;
-        obs_.y = min_obs.y;
-        obs_.z = min_obs.z;
-        */
+    void obstacleCallback(const octomap_msgs::OctomapPtr &obs_msg){
+        collision_map_ = *obs_msg;
     }
     
+    octomap_msgs::Octomap collision_map_;
     std::vector<dmath::Vector3D> obstacles_;
     ros::Publisher cmd_pub_;
     ros::Subscriber obs_sub_;
