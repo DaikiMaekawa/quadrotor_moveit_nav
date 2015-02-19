@@ -69,7 +69,7 @@ public:
                 
                 dmath::Vector3D Fs;
                 for(int i=0; i < obstacles_lc.size(); i++){
-                    Fs += get_potential_force(obstacles_lc[i], 0, 0.5, 1.0, 1.5);
+                    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
                 }
 
                 //dmath::Vector3D g;
