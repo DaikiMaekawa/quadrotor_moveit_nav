@@ -43,6 +43,8 @@ public:
         
         while(ros::ok()){
             if(collision_map_.stamp != ros::Duration(0)){
+                octomap::OcTree tree = octomap_msgs::msgToMap(collision_map_);
+                
                 dmath::Vector3D Fs;
                 for(int i=0; i < obstacles_.size(); i++){
                     Fs += get_potential_force(obstacles_[i], 0, 0.005, 1.0, 1.5);
