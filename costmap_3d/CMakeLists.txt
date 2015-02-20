@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(quadrotor_local_planner)
+project(costmap_3d)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED roscpp tf octomap_msgs)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+)
 
 find_package(octomap REQUIRED)
 
@@ -79,8 +81,8 @@ find_package(octomap REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES quadrotor_obstacle_avoidance
-#  CATKIN_DEPENDS other_catkin_pkg
+#  LIBRARIES costmap_3d
+#  CATKIN_DEPENDS roscpp
    DEPENDS octomap
 )
 
@@ -88,32 +90,38 @@ catkin_package(
 ## Build ##
 ###########
 
+## Specify additional locations of header files
+## Your package locations should be listed before other locations
+# include_directories(include)
 include_directories(
-    include
-    ${catkin_INCLUDE_DIRS}
-    ${OCTOMAP_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
-# add_library(quadrotor_obstacle_avoidance
-#   src/${PROJECT_NAME}/quadrotor_obstacle_avoidance.cpp
+# add_library(costmap_3d
+#   src/${PROJECT_NAME}/costmap_3d.cpp
 # )
 
+add_executable(local_map_3d_publisher
+    src/local_map_3d_publisher.cpp
+)
 
-add_executable(apf_planner 
-    include/dmath/geometry.h
-    src/apf_planner.cpp
+add_executable(local_map_2d_publisher
+    src/local_map_2d_publisher.cpp
 )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(quadrotor_obstacle_avoidance_node quadrotor_obstacle_avoidance_generate_messages_cpp)
+# add_dependencies(costmap_3d_node costmap_3d_generate_messages_cpp)
 
-## Specify libraries to link a library or executable target against
-
-target_link_libraries(apf_planner
+target_link_libraries(local_map_3d_publisher
     ${catkin_LIBRARIES}
     ${OCTOMAP_LIBRARIES}
+)
+
+target_link_libraries(local_map_2d_publisher
+    ${catkin_LIBRARIES}
 )
 
 #############
@@ -131,7 +139,7 @@ target_link_libraries(apf_planner
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS quadrotor_obstacle_avoidance quadrotor_obstacle_avoidance_node
+# install(TARGETS costmap_3d costmap_3d_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -156,7 +164,7 @@ target_link_libraries(apf_planner
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_quadrotor_obstacle_avoidance.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_costmap_3d.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
