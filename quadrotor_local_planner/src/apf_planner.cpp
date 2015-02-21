@@ -76,9 +76,9 @@ public:
                 Fs += get_potential_force(g, 200, 0, 1.5, 1);
                 
                 dmath::Vector3D vel = Fs * force;
-                cmd.linear.x = vel.y;
-                cmd.linear.y = vel.x;
-                cmd.linear.z = vel.z;
+                cmd.linear.x = vel.x;
+                //cmd.linear.y = vel.x;
+                //cmd.linear.z = vel.z;
                 
                 cmd_pub_.publish(cmd);
             }
