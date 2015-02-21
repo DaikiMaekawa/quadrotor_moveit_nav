@@ -89,7 +89,7 @@ public:
                 dmath::Vector3D vel = Fs * force;
                 cmd.linear.x = -vel.x;
                 cmd.linear.y = -vel.y;
-                //cmd.linear.z = vel.z;
+                cmd.linear.z = -vel.z;
                 
                 cmd_pub_.publish(cmd);
             }
