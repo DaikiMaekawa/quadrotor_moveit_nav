@@ -72,8 +72,17 @@ public:
                 //    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
                 //}
 
-                dmath::Vector3D g = goal_lc_;
-                Fs += get_potential_force(g, 200, 0, 1.5, 1);
+                geometry_msgs::PointStamped goal_msg_lc;
+                dmath::Vector3D goal_lc;
+                try{
+                    tf_listener_.transformPoint(base_link_, goal_msg_gl_, goal_msg_lc);
+                    goal_lc = dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
+                }catch(tf::TransformException &ex){
+                    ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
+                    goal_lc = dmath::Vector3D();
+                }
+                
+                Fs += get_potential_force(goal_lc, 200, 0, 1.5, 1);
                 
                 dmath::Vector3D vel = Fs * force;
                 cmd.linear.x = vel.x;
@@ -106,14 +115,7 @@ private:
     }
 
     void goalCallback(const geometry_msgs::PointStamped &goal_msg){
-        geometry_msgs::PointStamped g_lc;
-        try{
-            tf_listener_.transformPoint(base_link_, goal_msg, g_lc);
-            goal_lc_ = dmath::Vector3D(g_lc.point.x, g_lc.point.y, g_lc.point.z);
-        }catch(tf::TransformException &ex){
-            ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
-            goal_lc_ = dmath::Vector3D();
-        }
+        goal_msg_gl_ = goal_msg;
     }
     
     octomap_msgs::Octomap collision_map_;
@@ -121,7 +123,7 @@ private:
     ros::Subscriber obs_sub_, goal_sub_;
     tf::TransformListener tf_listener_;
     std::string base_link_;
-    dmath::Vector3D goal_lc_;
+    geometry_msgs::PointStamped goal_msg_gl_;
 };
 
 int main(int argc, char *argv[]){
