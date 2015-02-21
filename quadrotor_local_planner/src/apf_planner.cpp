@@ -21,7 +21,8 @@ public:
     ArtificialPotentialField(ros::NodeHandle &node) : 
         base_link_("base_link"),
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
-        obs_sub_(node.subscribe("octomap_full", 10, &ArtificialPotentialField::obstacleCallback, this))
+        obs_sub_(node.subscribe("octomap_full", 10, &ArtificialPotentialField::obstacleCallback, this)),
+        goal_sub_(node.subscribe("clicked_point", 10, &ArtificialPotentialField::goalCallback, this))
 
     {
         collision_map_.header.stamp = ros::Time(0);
@@ -65,22 +66,31 @@ public:
                         ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
                     }
                 }
-                ROS_INFO_STREAM("size = " << obstacles_lc.size());
                 
                 dmath::Vector3D Fs;
-                for(int i=0; i < obstacles_lc.size(); i++){
-                    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
-                }
+                //for(int i=0; i < obstacles_lc.size(); i++){
+                //    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
+                //}
 
-                //dmath::Vector3D g;
-                //Fs += get_potential_force(g, 2, 0, 1.5, 1);
+                geometry_msgs::PointStamped goal_msg_lc;
+                dmath::Vector3D goal_lc;
+                try{
+                    tf_listener_.waitForTransform(goal_msg_gl_.header.frame_id, base_link_, ros::Time(0), ros::Duration(1));
+                    goal_msg_gl_.header.stamp = ros::Time(0);
+                    tf_listener_.transformPoint(base_link_, goal_msg_gl_, goal_msg_lc);
+                    goal_lc = dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
+                }catch(tf::TransformException &ex){
+                    ROS_ERROR_STREAM("Exception trying to transform goal position: " << ex.what());
+                    goal_lc = dmath::Vector3D();
+                }
+                
+                Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
-                cmd.linear.x = vel.y;
-                cmd.linear.y = vel.x;
-                cmd.linear.z = vel.z;
+                cmd.linear.x = -vel.x;
+                cmd.linear.y = -vel.y;
+                //cmd.linear.z = vel.z;
                 
-                ROS_INFO_STREAM("cmd = " << cmd);
                 cmd_pub_.publish(cmd);
             }
             r.sleep();
@@ -94,6 +104,7 @@ private:
         u = normalize(u);
 
         const double d = magnitude(dest_lc);
+        ROS_INFO_STREAM("dist = " << d);
         double U = 0;
         if(fabs(d) > dmath::tol){
             U = -A/pow(d, n) + B/pow(d, m);
@@ -105,12 +116,17 @@ private:
     void obstacleCallback(const octomap_msgs::OctomapPtr &obs_msg){
         collision_map_ = *obs_msg;
     }
+
+    void goalCallback(const geometry_msgs::PointStamped &goal_msg){
+        goal_msg_gl_ = goal_msg;
+    }
     
     octomap_msgs::Octomap collision_map_;
     ros::Publisher cmd_pub_;
-    ros::Subscriber obs_sub_;
+    ros::Subscriber obs_sub_, goal_sub_;
     tf::TransformListener tf_listener_;
     std::string base_link_;
+    geometry_msgs::PointStamped goal_msg_gl_;
 };
 
 int main(int argc, char *argv[]){
