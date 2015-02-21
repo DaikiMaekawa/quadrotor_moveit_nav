@@ -78,7 +78,7 @@ public:
                     tf_listener_.waitForTransform(goal_msg_gl_.header.frame_id, base_link_, ros::Time(0), ros::Duration(1));
                     goal_msg_gl_.header.stamp = ros::Time(0);
                     tf_listener_.transformPoint(base_link_, goal_msg_gl_, goal_msg_lc);
-                    goal_lc = dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
+                    goal_lc = -dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
                 }catch(tf::TransformException &ex){
                     ROS_ERROR_STREAM("Exception trying to transform goal position: " << ex.what());
                     goal_lc = dmath::Vector3D();
@@ -87,9 +87,9 @@ public:
                 Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
-                cmd.linear.x = -vel.x;
-                cmd.linear.y = -vel.y;
-                //cmd.linear.z = vel.z;
+                cmd.linear.x = vel.x;
+                cmd.linear.y = vel.y;
+                cmd.linear.z = vel.z;
                 
                 cmd_pub_.publish(cmd);
             }
