@@ -74,6 +74,7 @@ public:
 
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
+                goal_msg_gl_.header.stamp = ros::Time::now();
                 try{
                     tf_listener_.transformPoint(base_link_, goal_msg_gl_, goal_msg_lc);
                     goal_lc = dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
@@ -82,7 +83,7 @@ public:
                     goal_lc = dmath::Vector3D();
                 }
                 
-                Fs += get_potential_force(goal_lc, 100, 0, 1.5, 1);
+                Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
                 cmd.linear.x = -vel.x;
@@ -102,6 +103,7 @@ private:
         u = normalize(u);
 
         const double d = magnitude(dest_lc);
+        ROS_INFO_STREAM("dist = " << d);
         double U = 0;
         if(fabs(d) > dmath::tol){
             U = -A/pow(d, n) + B/pow(d, m);
