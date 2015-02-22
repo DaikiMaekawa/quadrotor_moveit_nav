@@ -49,7 +49,12 @@ public:
                 std::string map_frame = collision_map_.header.frame_id;
                 octomap::OcTree *tree = dynamic_cast<octomap::OcTree*>(octomap_msgs::msgToMap(collision_map_));
                 octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
+                
+                ros::Time now = ros::Time::now();
+                tf_listener_.waitForTransform(map_frame, base_link_, now, ros::Duration(1));
                 for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
+                    if(it->getOccupancy() < tree->getOccupancyThres()) continue;
+                    
                     geometry_msgs::PointStamped p_in, p_out;
                     p_in.header.frame_id = map_frame;
                     p_in.point.x = it.getX();
@@ -57,10 +62,11 @@ public:
                     p_in.point.z = it.getZ();
                     
                     try{
+                        p_in.header.stamp = now;
                         tf_listener_.transformPoint(base_link_, p_in, p_out);
                         dmath::Vector3D obs(p_out.point.x, p_out.point.y, p_out.point.z);
-                        if(magnitude(obs) < 500){
-                            obstacles_lc.push_back(obs);
+                        if(magnitude(obs) < 2.0){
+                            obstacles_lc.push_back(-obs);
                         }
                     }catch(tf::TransformException &ex){
                         ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
@@ -68,9 +74,9 @@ public:
                 }
                 
                 dmath::Vector3D Fs;
-                //for(int i=0; i < obstacles_lc.size(); i++){
-                //    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
-                //}
+                for(int i=0; i < obstacles_lc.size(); i++){
+                    Fs += get_potential_force(obstacles_lc[i], 0, 0.3, 1.0, 1.0);
+                }
 
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
@@ -87,6 +93,12 @@ public:
                 Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
+                if(vel.x > 0.5) vel.x = 0.5;
+                if(vel.x < -0.5) vel.x = -0.5;
+                if(vel.y > 0.5) vel.y = 0.5;
+                if(vel.y < -0.5) vel.y = -0.5;
+                if(vel.z > 0.5) vel.z = 0.5;
+                if(vel.z < -0.5) vel.z = -0.5;
                 cmd.linear.x = vel.x;
                 cmd.linear.y = vel.y;
                 cmd.linear.z = vel.z;
