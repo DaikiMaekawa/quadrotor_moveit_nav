@@ -60,7 +60,7 @@ public:
                         tf_listener_.transformPoint(base_link_, p_in, p_out);
                         dmath::Vector3D obs(p_out.point.x, p_out.point.y, p_out.point.z);
                         if(magnitude(obs) < 2.0){
-                            obstacles_lc.push_back(obs);
+                            obstacles_lc.push_back(-obs);
                         }
                     }catch(tf::TransformException &ex){
                         ROS_ERROR_STREAM("Exception trying to transform octomap: " << ex.what());
