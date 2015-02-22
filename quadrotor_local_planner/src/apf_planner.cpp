@@ -49,6 +49,9 @@ public:
                 std::string map_frame = collision_map_.header.frame_id;
                 octomap::OcTree *tree = dynamic_cast<octomap::OcTree*>(octomap_msgs::msgToMap(collision_map_));
                 octomap::OcTree::leaf_iterator const end_it = tree->end_leafs();
+                
+                ros::Time now = ros::Time::now();
+                tf_listener_.waitForTransform(map_frame, base_link_, now, ros::Duration(1));
                 for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
                     geometry_msgs::PointStamped p_in, p_out;
                     p_in.header.frame_id = map_frame;
@@ -57,6 +60,7 @@ public:
                     p_in.point.z = it.getZ();
                     
                     try{
+                        p_in.header.stamp = now;
                         tf_listener_.transformPoint(base_link_, p_in, p_out);
                         dmath::Vector3D obs(p_out.point.x, p_out.point.y, p_out.point.z);
                         if(magnitude(obs) < 2.0){
