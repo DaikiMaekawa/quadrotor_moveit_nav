@@ -87,6 +87,8 @@ public:
                 Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
+                if(vel.x > 0.5) vel.x = 0.5;
+                if(vel.x < -0.5) vel.x = -0.5;
                 cmd.linear.x = vel.x;
                 cmd.linear.y = vel.y;
                 cmd.linear.z = vel.z;
