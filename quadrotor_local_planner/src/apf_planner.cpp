@@ -95,6 +95,10 @@ public:
                 dmath::Vector3D vel = Fs * force;
                 if(vel.x > 0.5) vel.x = 0.5;
                 if(vel.x < -0.5) vel.x = -0.5;
+                if(vel.y > 0.5) vel.y = 0.5;
+                if(vel.y < -0.5) vel.y = -0.5;
+                if(vel.z > 0.5) vel.z = 0.5;
+                if(vel.z < -0.5) vel.z = -0.5;
                 cmd.linear.x = vel.x;
                 cmd.linear.y = vel.y;
                 cmd.linear.z = vel.z;
