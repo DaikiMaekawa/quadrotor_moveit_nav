@@ -68,9 +68,9 @@ public:
                 }
                 
                 dmath::Vector3D Fs;
-                //for(int i=0; i < obstacles_lc.size(); i++){
-                //    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
-                //}
+                for(int i=0; i < obstacles_lc.size(); i++){
+                    Fs += get_potential_force(obstacles_lc[i], 0, 1.0, 1.0, 1.5);
+                }
 
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
