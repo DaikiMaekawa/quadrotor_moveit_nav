@@ -65,7 +65,7 @@ public:
                         p_in.header.stamp = now;
                         tf_listener_.transformPoint(base_link_, p_in, p_out);
                         dmath::Vector3D obs(p_out.point.x, p_out.point.y, p_out.point.z);
-                        if(magnitude(obs) < 2.0){
+                        if(magnitude(obs) < 5.0){
                             obstacles_lc.push_back(-obs);
                         }
                     }catch(tf::TransformException &ex){
@@ -75,7 +75,7 @@ public:
                 
                 dmath::Vector3D Fs;
                 for(int i=0; i < obstacles_lc.size(); i++){
-                    Fs += get_potential_force(obstacles_lc[i], 0, 0.3, 1.0, 1.0);
+                    Fs += get_potential_force(obstacles_lc[i], 0, 0.05, 1.0, 1.0);
                 }
 
                 geometry_msgs::PointStamped goal_msg_lc;
@@ -101,7 +101,7 @@ public:
                 if(vel.z < -0.5) vel.z = -0.5;
                 cmd.linear.x = vel.x;
                 cmd.linear.y = vel.y;
-                cmd.linear.z = vel.z;
+                //cmd.linear.z = vel.z;
                 
                 cmd_pub_.publish(cmd);
             }
