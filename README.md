@@ -1,5 +1,7 @@
 # quadrotor_navigation
 
+This packages provide path planning for moving the quadrotor in 3D using ROS.
+
 Navigation package using ROS for Quadrotor
 
 ## License
