@@ -53,6 +53,8 @@ public:
                 ros::Time now = ros::Time::now();
                 tf_listener_.waitForTransform(map_frame, base_link_, now, ros::Duration(1));
                 for(octomap::OcTree::leaf_iterator it = tree->begin_leafs(0); it != end_it; it++){
+                    if(it->getOccupancy() < tree->getOccupancyThres()) continue;
+                    
                     geometry_msgs::PointStamped p_in, p_out;
                     p_in.header.frame_id = map_frame;
                     p_in.point.x = it.getX();
