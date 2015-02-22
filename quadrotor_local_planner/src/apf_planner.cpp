@@ -101,7 +101,7 @@ public:
                 if(vel.z < -0.5) vel.z = -0.5;
                 cmd.linear.x = vel.x;
                 cmd.linear.y = vel.y;
-                cmd.linear.z = vel.z;
+                //cmd.linear.z = vel.z;
                 
                 cmd_pub_.publish(cmd);
             }
