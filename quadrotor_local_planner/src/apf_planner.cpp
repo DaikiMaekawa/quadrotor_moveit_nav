@@ -120,7 +120,6 @@ private:
         u = normalize(u);
 
         const double d = magnitude(dest_lc);
-        ROS_INFO_STREAM("dist = " << d);
         double U = 0;
         if(fabs(d) > dmath::tol){
             U = -A/pow(d, n) + B/pow(d, m);
