@@ -32,7 +32,7 @@ void planWithSimpleSetup(){
 
     ss.setStartAndGoalStates(start, goal);
 
-    ob::PlannerPtr planner(new og::PRM(ss.getSpaceInformation()));
+    ob::PlannerPtr planner(new og::RRT(ss.getSpaceInformation()));
     ss.setPlanner(planner);
 
     std::cout << "-----------------" << std::endl;
