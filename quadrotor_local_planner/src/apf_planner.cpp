@@ -93,7 +93,7 @@ public:
                     goal_lc = dmath::Vector3D();
                 }
 
-                Fs += get_potential_force(goal_lc, 100, 0, 1, 1);
+                Fs += get_potential_force(goal_lc, 50, 0, 1, 1);
                 
                 dmath::Vector3D vel = Fs * force;
 
