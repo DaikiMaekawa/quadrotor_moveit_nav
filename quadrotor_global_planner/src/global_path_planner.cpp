@@ -53,6 +53,7 @@ void planWithSimpleSetup(){
 }
 
 int main(int argc, char *argv[]){
+    ros::init(argc, argv, "global_path_planner");
     planWithSimpleSetup();
     return 0;
 }
