@@ -28,7 +28,7 @@ void planWithSimpleSetup(){
 
     ob::ScopedState<ob::SE2StateSpace> goal(space);
     goal->setXY(0.9, 0.9);
-    std::cout << "goal: " goal.print(std::cout);
+    std::cout << "goal: "; goal.print(std::cout);
 
     ss.setStartAndGoalStates(start, goal);
 
