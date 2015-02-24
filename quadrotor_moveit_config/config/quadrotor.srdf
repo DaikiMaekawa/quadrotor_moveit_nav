@@ -11,5 +11,8 @@
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="base">
         <link name="base_link" />
+        <joint name="map" />
     </group>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="map" type="floating" parent_frame="map" child_link="base_link" />
 </robot>
