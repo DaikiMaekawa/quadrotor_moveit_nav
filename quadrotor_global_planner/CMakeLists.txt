@@ -112,6 +112,7 @@ add_executable(global_path_planner
 
 target_link_libraries(global_path_planner
     ${catkin_LIBRARIES}
+    ${OMPL_LIBRARIES}
 )
 
 #############
