@@ -5,4 +5,4 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/quadrotor.srdf
   CONFIG:
-    generated_timestamp: 1424806322
+    generated_timestamp: 1424806542
