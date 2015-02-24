@@ -79,7 +79,7 @@ public:
                 }
 
                 dmath::Vector3D Fs;
-                Fs += get_potential_force(min_obs, 0, 20.0, 1.0, 6.0);
+                Fs += get_potential_force(min_obs, 0, 3.0, 1.0, 4.0);
 
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
