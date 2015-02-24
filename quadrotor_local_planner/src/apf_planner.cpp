@@ -84,8 +84,8 @@ public:
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
                 try{
-                    tf_listener_.waitForTransform(goal_msg_gl_.header.frame_id, base_link_, ros::Time(0), ros::Duration(1));
-                    goal_msg_gl_.header.stamp = ros::Time(0);
+                    tf_listener_.waitForTransform(goal_msg_gl_.header.frame_id, base_link_, now, ros::Duration(1));
+                    goal_msg_gl_.header.stamp = now;
                     tf_listener_.transformPoint(base_link_, goal_msg_gl_, goal_msg_lc);
                     goal_lc = -dmath::Vector3D(goal_msg_lc.point.x, goal_msg_lc.point.y, goal_msg_lc.point.z);
                 }catch(tf::TransformException &ex){
