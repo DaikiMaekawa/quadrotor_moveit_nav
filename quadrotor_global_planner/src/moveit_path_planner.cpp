@@ -36,6 +36,8 @@ int main(int argc, char *argv[]){
     std::vector<double> tolerance_angle(3, 0.01);
 
     req.group_name = "base";
+    moveit_msgs::Constraints pose_goal = kinematic_constraints::constructGoalConstraints("base_link", pose, tolerance_pose, tolerance_angle);
+    req.goal_constraints.push_back(pose_goal);
     planning_pipeline->generatePlan(planning_scene, req, res);
 
     if(res.error_code_.val != res.error_code_.SUCCESS){
