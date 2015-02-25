@@ -14,13 +14,15 @@ int main(int argc, char *argv[]){
     spinner.start();
     ros::NodeHandle node_handle("~");
 
+    ros::WallDuration sleep_time(20.0);
+    sleep_time.sleep();
+    
     robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
     robot_model::RobotModelPtr robot_model = robot_model_loader.getModel();
 
     planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
     planning_pipeline::PlanningPipelinePtr planning_pipeline(new planning_pipeline::PlanningPipeline(robot_model, node_handle, "planning_plugin", "request_adapters"));
-    ros::WallDuration sleep_time(20.0);
     sleep_time.sleep();
 
     planning_interface::MotionPlanRequest req;
