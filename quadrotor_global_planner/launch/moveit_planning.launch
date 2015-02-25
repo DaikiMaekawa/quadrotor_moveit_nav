@@ -1,11 +1,13 @@
 <launch>
     <arg name="planning_plugin" value="ompl_interface/OMPLPlanner" />
     <arg name="planning_adapters" value="default_planner_request_adapters/AddTimeParameterization default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
-    <include file="$(find quadrotor_moveit_config)/launch/planning_context.launch">
+    <!--include file="$(find quadrotor_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
-    </include>
+    </include-->
 
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <include file="$(find quadrotor_moveit_config)/launch/demo.launch"/>
+
+    <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
         <param name="/use_gui" value="true"/>
     </node>
 
@@ -13,13 +15,12 @@
 
     <include file="$(find quadrotor_moveit_config)/launch/moveit_rviz.launch">
         <arg name="config" value="true"/>
-    </include>
+    </include-->
 
     <node name="moveit_path_planner" pkg="quadrotor_global_planner" type="moveit_path_planner" respawn="false" output="screen">
         <param name="planning_plugin" value="$(arg planning_plugin)"/>
         <param name="request_adapters" value="$(arg planning_adapters)"/>
     </node>
 
-    <rosparam command="load" file="$(find quadrotor_moveit_config)/config/kinematics.yaml"/>
-    <rosparam command="load" file="$(find quadrotor_moveit_config)/config/ompl_planning.yaml"/>
+    <!--rosparam command="load" file="$(find quadrotor_moveit_config)/config/ompl_planning.yaml"/-->
 </launch>
