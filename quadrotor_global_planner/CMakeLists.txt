@@ -5,7 +5,7 @@ project(quadrotor_global_planner)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
+  roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface pluginlib cmake_modules
 )
 
 find_package(ompl)
@@ -106,6 +106,10 @@ add_executable(global_path_planner
     src/global_path_planner.cpp
 )
 
+add_executable(moveit_path_planner
+    src/moveit_path_planner.cpp
+)
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(quadrotor_global_planner_node quadrotor_global_planner_generate_messages_cpp)
@@ -113,6 +117,10 @@ add_executable(global_path_planner
 target_link_libraries(global_path_planner
     ${catkin_LIBRARIES}
     ${OMPL_LIBRARIES}
+)
+
+target_link_libraries(moveit_path_planner
+    ${catkin_LIBRARIES}
 )
 
 #############
