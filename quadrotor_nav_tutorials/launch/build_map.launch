@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+    <include file="$(find quadrotor_gazebo)/launch/upload.launch"/>
+
+    <node name="octomap_server" pkg="octomap_server" type="octomap_server_node" args="/home/daikimaekawa/hoge.bt">
+        <remap from="cloud_in" to="/camera/depth/points"/>
+        <param name="latch" value="false"/>
+        <param name="resolution" value="0.5"/>
+    </node>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find quadrotor_nav_tutorials)/rviz_cfg/nav.rviz"/>
+
+</launch>
