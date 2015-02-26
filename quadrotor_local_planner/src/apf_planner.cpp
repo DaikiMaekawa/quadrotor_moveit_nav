@@ -10,6 +10,8 @@
 #include <octomap_msgs/conversions.h>
 #include <geometry_msgs/PointStamped.h>
 
+#include <moveit_msgs/MoveGroupActionResult.h>
+
 #include <string>
 #include <math.h>
 #include <vector>
@@ -22,7 +24,8 @@ public:
         base_link_("base_link"),
         cmd_pub_(node.advertise<geometry_msgs::Twist>("cmd_vel", 10)),
         obs_sub_(node.subscribe("octomap_full", 10, &ArtificialPotentialField::obstacleCallback, this)),
-        goal_sub_(node.subscribe("clicked_point", 10, &ArtificialPotentialField::goalCallback, this))
+        goal_sub_(node.subscribe("clicked_point", 10, &ArtificialPotentialField::goalCallback, this)),
+        path_sub_(node.subscribe("/move_group/result", 10, &ArtificialPotentialField::globalPathCallback, this))
 
     {
         collision_map_.header.stamp = ros::Time(0);
@@ -128,6 +131,11 @@ private:
         return U * u;
     }
 
+    void globalPathCallback(const moveit_msgs::MoveGroupActionResult &path_msg){
+        path_msg_gl_ = path_msg;
+        ROS_INFO_STREAM("path = " << path_msg_gl_);
+    }
+    
     void obstacleCallback(const octomap_msgs::OctomapPtr &obs_msg){
         collision_map_ = *obs_msg;
     }
@@ -138,10 +146,11 @@ private:
     
     octomap_msgs::Octomap collision_map_;
     ros::Publisher cmd_pub_;
-    ros::Subscriber obs_sub_, goal_sub_;
+    ros::Subscriber obs_sub_, goal_sub_, path_sub_;
     tf::TransformListener tf_listener_;
     std::string base_link_;
     geometry_msgs::PointStamped goal_msg_gl_;
+    moveit_msgs::MoveGroupActionResult path_msg_gl_;
 };
 
 int main(int argc, char *argv[]){
