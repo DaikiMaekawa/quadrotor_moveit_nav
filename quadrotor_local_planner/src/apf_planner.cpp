@@ -9,6 +9,7 @@
 #include <octomap_msgs/Octomap.h>
 #include <octomap_msgs/conversions.h>
 #include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/PoseStamped.h>
 
 #include <moveit_msgs/MoveGroupActionResult.h>
 
@@ -83,7 +84,35 @@ public:
 
                 dmath::Vector3D Fs;
                 Fs += get_potential_force(min_obs, 0, 3.0, 1.0, 4.0);
-
+                
+                double min_goal_dist = 99999999;
+                dmath::Vector3D goal_lc;
+                for(int i=0; i < path_msg_gl_.result.planned_trajectory.joint_trajectory.points.size(); i++){
+                    geometry_msgs::PoseStamped pose_in, pose_out;
+                    pose_in.header.frame_id = path_msg_gl_.header.frame_id;
+                    pose_in.pose.position.x = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[0];
+                    pose_in.pose.position.y = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[1];
+                    pose_in.pose.position.z = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[2];
+                    pose_in.pose.orientation.x = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[3];
+                    pose_in.pose.orientation.y = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[4];
+                    pose_in.pose.orientation.z = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[5];
+                    pose_in.pose.orientation.w = path_msg_gl_.result.planned_trajectory.joint_trajectory.points[i].positions[6];
+                    try{
+                        tf_listener_.waitForTransform(pose_in.header.frame_id, base_link_, now, ros::Duration(1));
+                        pose_in.header.stamp = now;
+                        tf_listener_.transformPose(base_link_, pose_in, pose_out);
+                        dmath::Vector3D pos_lc(pose_out.pose.position.x, pose_out.pose.position.y, pose_out.pose.position.z);
+                        double dist = magnitude(pos_lc);
+                        if(min_goal_dist > dist){
+                            min_goal_dist = dist;
+                            goal_lc = -pos_lc;
+                        }
+                    }catch(tf::TransformException &ex){
+                        ROS_ERROR_STREAM("Exception trying to transform goal position: " << ex.what());
+                    }
+                }
+                
+                /*
                 geometry_msgs::PointStamped goal_msg_lc;
                 dmath::Vector3D goal_lc;
                 try{
@@ -95,6 +124,7 @@ public:
                     ROS_ERROR_STREAM("Exception trying to transform goal position: " << ex.what());
                     goal_lc = dmath::Vector3D();
                 }
+                */
 
                 Fs += get_potential_force(goal_lc, 50, 0, 1, 1);
                 
