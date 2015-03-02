@@ -9,12 +9,14 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
-    <group name="base">
+    <group name="Base">
         <link name="base_link" />
-        <joint name="map" />
+        <link name="camera_link" />
+        <joint name="Base" />
+        <joint name="camera_joint" />
     </group>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
-    <virtual_joint name="map" type="floating" parent_frame="map" child_link="base_link" />
+    <virtual_joint name="Base" type="floating" parent_frame="/odom_combined" child_link="base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="camera_link" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="laser0_frame" reason="Adjacent" />

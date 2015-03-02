@@ -1,4 +1,4 @@
 controller_list:
-  - name: fake_base_controller
+  - name: fake_Base_controller
     joints:
-      - map
+      - Base
