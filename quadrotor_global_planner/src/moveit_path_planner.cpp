@@ -18,7 +18,6 @@ int main(int argc, char *argv[]){
     move_group_interface::MoveGroup base_group("base");
     
     base_group.getJointValueTarget().printStateInfo();
-    ROS_INFO("<><><><><><>");
     base_group.getJointValueTarget().printStatePositions();
     ROS_INFO("get variable counts");
     ROS_INFO_STREAM("var = " << base_group.getJointValueTarget().getVariablePositions()[6]);
